@@ -27,7 +27,17 @@
     "react-native-worklets": "0.5.1"
   },
   "devDependencies": {
+    "eslint": "^9.39.5",
+    "eslint-config-expo": "~10.0.0",
     "@types/react": "~19.1.10",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "babel-plugin-module-resolver": "^5.0.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.6",
+    "husky": "^9.1.7",
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.9.6",
     "typescript": "~5.9.2"
   },
   "scripts": {
@@ -35,7 +45,20 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo run android",
     "ios": "expo run ios",
-    "lint": "expo lint"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,scss,scss,html,env}": [
+      "prettier --write"
+    ]
   },
   "private": true
 }
