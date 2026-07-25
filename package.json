@@ -2,6 +2,17 @@
   "name": "uptimev",
   "main": "expo-router/entry",
   "version": "1.0.0",
+  "scripts": {
+    "start": "expo start",
+    "reset-project": "node ./scripts/reset-project.js",
+    "android": "expo run android",
+    "ios": "expo run ios",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
   "dependencies": {
     "@nozbe/watermelondb": "^0.28.0",
     "expo": "~54.0.35",
@@ -40,17 +51,6 @@
     "lint-staged": "^14.0.1",
     "prettier": "^3.9.6",
     "typescript": "~5.9.2"
-  },
-  "scripts": {
-    "start": "expo start",
-    "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo run android",
-    "ios": "expo run ios",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
-    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
