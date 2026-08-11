@@ -1,7 +1,7 @@
 import { JobPost } from '@/shared/db';
 
 export type JobPostCardProps = {
-  jobPost?: JobPost;
+  jobPost: JobPost;
 };
 
 export const PostStatus = {
