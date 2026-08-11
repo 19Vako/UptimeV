@@ -1,18 +1,7 @@
-import JobPost from '@/shared/db/model/jobPost';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { mockJobPost } from '../mocks/mockJobPost.mock';
 import { JobPostCardProps } from '../model/type';
-
-const mockJobPost = {
-  title: 'Проверка: монтаж двери',
-  description: 'Проверяем внешний вид карточки и отображение данных на примере мокового поста.',
-  status: 'В работе',
-  customerId: 'customer-123',
-  customer: 'ООО «Успех»',
-  location: 'Москва, ул. Пушкина, д. 10',
-  createdAt: new Date(),
-  updatedAt: new Date(),
-} as JobPost;
 
 export default function JobPostCard({ jobPost = mockJobPost }: JobPostCardProps) {
   const formattedDate = jobPost.createdAt ? jobPost.createdAt.toLocaleDateString() : '';
@@ -21,24 +10,24 @@ export default function JobPostCard({ jobPost = mockJobPost }: JobPostCardProps)
     <View style={styles.card}>
       <View style={styles.header}>
         <Text style={styles.title} numberOfLines={1}>
-          {jobPost.title || 'Без названия'}
+          {jobPost.title || 'Untitled'}
         </Text>
         <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>{jobPost.status || 'Новый'}</Text>
+          <Text style={styles.statusText}>{jobPost.status || 'New'}</Text>
         </View>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Клиент:</Text>
+        <Text style={styles.label}>Customer:</Text>
         <Text style={styles.value} numberOfLines={1}>
-          {jobPost.customer || 'Не указано'}
+          {jobPost.customer || 'Not specified'}
         </Text>
       </View>
 
       <View style={styles.row}>
-        <Text style={styles.label}>Адрес:</Text>
+        <Text style={styles.label}>Address:</Text>
         <Text style={styles.value} numberOfLines={1}>
-          {jobPost.location || 'Не указано'}
+          {jobPost.location || 'Not specified'}
         </Text>
       </View>
 
@@ -49,7 +38,7 @@ export default function JobPostCard({ jobPost = mockJobPost }: JobPostCardProps)
       ) : null}
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Создано: {formattedDate}</Text>
+        <Text style={styles.footerText}>Created: {formattedDate}</Text>
       </View>
     </View>
   );
