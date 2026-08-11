@@ -1,16 +1,7 @@
 import { PostStatus } from '@/entities/jobPost';
 import { TableNames } from '@/shared/constants/table-names';
 import { database, JobPost } from '@/shared/db';
-
-interface CreatePostArgs {
-  title: string;
-  description: string;
-  customerId: string;
-  location: string;
-  customer: string;
-  latitude: number;
-  longitude: number;
-}
+import { CreatePostArgs } from '../types';
 
 export const createJobPost = async ({
   title,
