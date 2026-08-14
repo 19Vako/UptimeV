@@ -7,3 +7,5 @@ export interface CreatePostArgs {
   latitude: number;
   longitude: number;
 }
+
+export type CreatePostFormFields = keyof CreatePostArgs;

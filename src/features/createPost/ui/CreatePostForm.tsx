@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { Button, Modal, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { Button, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { createJobPost } from '../model/createJobPost';
+import { CreatePostArgs, CreatePostFormFields } from '../types';
+import FormInput from './FormInput';
 
 const CreatePostForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -9,10 +11,11 @@ const CreatePostForm = () => {
     title: '',
     message: '',
   });
-  const [form, setForm] = useState({
+
+  const [form, setForm] = useState<CreatePostArgs>({
     title: '',
     description: '',
-    customerId: '',
+    customerId: '0000',
     customer: '',
     location: '',
     latitude: 0,
@@ -24,110 +27,55 @@ const CreatePostForm = () => {
   };
 
   const handleSubmit = async () => {
-    if (!form.title) {
-      showNotification('Error', 'Please enter a title');
-      return;
-    }
-
     setIsSubmitting(true);
-
     try {
-      const payload = {
-        ...form,
-        latitude: Number(form.latitude),
-        longitude: Number(form.longitude),
-      };
-
-      await createJobPost(payload);
-
+      await createJobPost(form);
       showNotification('Done', 'Post created');
-      setForm({
-        title: '',
-        description: '',
-        customerId: '',
-        customer: '',
-        location: '',
-        latitude: 0,
-        longitude: 0,
-      });
-    } catch (err) {
+    } catch {
       showNotification('Error', 'Failed to create post');
-      console.warn(err);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (field: keyof typeof form, value: string) => {
+  const handleChange = useCallback((field: CreatePostFormFields, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleCoordinateChange = (field: 'latitude' | 'longitude', value: string) => {
-    const parsedValue = value === '' ? 0 : Number(value);
-    const nextValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
-    setForm((prev) => ({ ...prev, [field]: nextValue }));
-  };
+  }, []);
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
+        <FormInput
+          title="Title"
+          field="title"
+          handleChange={handleChange}
           value={form.title}
-          onChangeText={(text) => handleChange('title', text)}
           placeholder="Title"
         />
 
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
+        <FormInput
+          title="Description"
+          field="description"
+          handleChange={handleChange}
           value={form.description}
-          onChangeText={(text) => handleChange('description', text)}
           placeholder="Description"
           multiline
         />
 
-        <Text style={styles.label}>Customer (ID)</Text>
-        <TextInput
-          style={styles.input}
-          value={form.customerId}
-          onChangeText={(text) => handleChange('customerId', text)}
-          placeholder="customerId"
-        />
-
-        <Text style={styles.label}>Customer (name)</Text>
-        <TextInput
-          style={styles.input}
+        <FormInput
+          title="Customer (name)"
+          field="customer"
+          handleChange={handleChange}
           value={form.customer}
-          onChangeText={(text) => handleChange('customer', text)}
           placeholder="customer"
         />
 
-        <Text style={styles.label}>Location</Text>
-        <TextInput
-          style={styles.input}
+        <FormInput
+          title="Location"
+          field="location"
+          handleChange={handleChange}
           value={form.location}
-          onChangeText={(text) => handleChange('location', text)}
           placeholder="Address or city"
-        />
-
-        <Text style={styles.label}>Latitude</Text>
-        <TextInput
-          style={styles.input}
-          value={form.latitude.toString()}
-          onChangeText={(text) => handleCoordinateChange('latitude', text)}
-          placeholder="0"
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Longitude</Text>
-        <TextInput
-          style={styles.input}
-          value={form.longitude.toString()}
-          onChangeText={(text) => handleCoordinateChange('longitude', text)}
-          placeholder="0"
-          keyboardType="numeric"
         />
 
         <View style={styles.button}>
