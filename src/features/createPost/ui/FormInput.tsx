@@ -1,40 +1,47 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput } from 'react-native';
-import { CreatePostFormFields } from '../types';
+import { Control, Controller } from 'react-hook-form';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import { CreatePostFormFields, CreatePostFormValues } from '../types';
 
-const FormInput = React.memo(
-  ({
-    title,
-    field,
-    value,
-    handleChange,
-    multiline,
-    placeholder,
-  }: {
-    title: string;
-    field: CreatePostFormFields;
-    value: string;
-    handleChange: (field: CreatePostFormFields, text: string) => void;
-    multiline?: boolean;
-    placeholder?: string;
-  }) => {
-    return (
-      <>
-        <Text style={styles.label}>{title}</Text>
-        <TextInput
-          style={[styles.input, multiline ? styles.textArea : undefined]}
-          value={value}
-          onChangeText={(text) => handleChange(field, text)}
-          placeholder={placeholder}
-          multiline={multiline}
-        />
-      </>
-    );
-  },
-);
-FormInput.displayName = 'FormInput';
+interface FormInputProps {
+  title: string;
+  name: CreatePostFormFields;
+  control: Control<CreatePostFormValues>;
+  multiline?: boolean;
+  placeholder?: string;
+}
+
+const FormInput = ({ title, name, control, multiline, placeholder }: FormInputProps) => {
+  return (
+    <Controller
+      control={control}
+      name={name}
+      render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+        <View style={styles.container}>
+          <Text style={styles.label}>{title}</Text>
+          <TextInput
+            style={[
+              styles.input,
+              multiline ? styles.textArea : undefined,
+              error ? styles.inputError : undefined,
+            ]}
+            value={value ? String(value) : ''}
+            onChangeText={onChange}
+            onBlur={onBlur}
+            placeholder={placeholder}
+            multiline={multiline}
+          />
+          {error && <Text style={styles.errorText}>{error.message}</Text>}
+        </View>
+      )}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: 12,
+  },
   label: {
     fontSize: 14,
     marginBottom: 6,
@@ -46,12 +53,19 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 8,
-    marginBottom: 12,
     backgroundColor: '#fff',
+  },
+  inputError: {
+    borderColor: 'red',
   },
   textArea: {
     minHeight: 80,
     textAlignVertical: 'top',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 12,
+    marginTop: 4,
   },
 });
 
