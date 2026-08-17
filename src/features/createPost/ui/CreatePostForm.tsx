@@ -1,139 +1,83 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
-import { Button, Modal, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useForm } from 'react-hook-form';
+import { Button, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { createJobPost } from '../model/createJobPost';
+import { CreatePostFormValues, createPostSchema } from '../types';
+import FormInput from './FormInput';
 
 const CreatePostForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [notification, setNotification] = useState({
     visible: false,
     title: '',
     message: '',
   });
-  const [form, setForm] = useState({
-    title: '',
-    description: '',
-    customerId: '',
-    customer: '',
-    location: '',
-    latitude: 0,
-    longitude: 0,
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<CreatePostFormValues>({
+    resolver: zodResolver(createPostSchema),
+    defaultValues: {
+      title: '',
+      description: '',
+      customerId: '0000',
+      customer: '',
+      location: '',
+      latitude: 0,
+      longitude: 0,
+    },
   });
 
   const showNotification = (title: string, message: string) => {
     setNotification({ visible: true, title, message });
   };
 
-  const handleSubmit = async () => {
-    if (!form.title) {
-      showNotification('Error', 'Please enter a title');
-      return;
-    }
-
-    setIsSubmitting(true);
-
+  const onSubmit = async (data: CreatePostFormValues) => {
     try {
-      const payload = {
-        ...form,
-        latitude: Number(form.latitude),
-        longitude: Number(form.longitude),
-      };
-
-      await createJobPost(payload);
-
-      showNotification('Done', 'Post created');
-      setForm({
-        title: '',
-        description: '',
-        customerId: '',
-        customer: '',
-        location: '',
-        latitude: 0,
-        longitude: 0,
-      });
-    } catch (err) {
-      showNotification('Error', 'Failed to create post');
-      console.warn(err);
-    } finally {
-      setIsSubmitting(false);
+      await createJobPost(data);
+      showNotification('Success', 'Post created successfully');
+      reset();
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create post';
+      showNotification('Error', errorMessage);
+      console.error('Create post error:', error);
     }
-  };
-
-  const handleChange = (field: keyof typeof form, value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleCoordinateChange = (field: 'latitude' | 'longitude', value: string) => {
-    const parsedValue = value === '' ? 0 : Number(value);
-    const nextValue = Number.isNaN(parsedValue) ? 0 : parsedValue;
-    setForm((prev) => ({ ...prev, [field]: nextValue }));
   };
 
   return (
     <>
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        <Text style={styles.label}>Title</Text>
-        <TextInput
-          style={styles.input}
-          value={form.title}
-          onChangeText={(text) => handleChange('title', text)}
-          placeholder="Title"
-        />
+        <FormInput title="Title" name="title" control={control} placeholder="Title" />
 
-        <Text style={styles.label}>Description</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          value={form.description}
-          onChangeText={(text) => handleChange('description', text)}
+        <FormInput
+          title="Description"
+          name="description"
+          control={control}
           placeholder="Description"
           multiline
         />
 
-        <Text style={styles.label}>Customer (ID)</Text>
-        <TextInput
-          style={styles.input}
-          value={form.customerId}
-          onChangeText={(text) => handleChange('customerId', text)}
-          placeholder="customerId"
+        <FormInput
+          title="Customer (name)"
+          name="customer"
+          control={control}
+          placeholder="Customer"
         />
 
-        <Text style={styles.label}>Customer (name)</Text>
-        <TextInput
-          style={styles.input}
-          value={form.customer}
-          onChangeText={(text) => handleChange('customer', text)}
-          placeholder="customer"
-        />
-
-        <Text style={styles.label}>Location</Text>
-        <TextInput
-          style={styles.input}
-          value={form.location}
-          onChangeText={(text) => handleChange('location', text)}
+        <FormInput
+          title="Location"
+          name="location"
+          control={control}
           placeholder="Address or city"
-        />
-
-        <Text style={styles.label}>Latitude</Text>
-        <TextInput
-          style={styles.input}
-          value={form.latitude.toString()}
-          onChangeText={(text) => handleCoordinateChange('latitude', text)}
-          placeholder="0"
-          keyboardType="numeric"
-        />
-
-        <Text style={styles.label}>Longitude</Text>
-        <TextInput
-          style={styles.input}
-          value={form.longitude.toString()}
-          onChangeText={(text) => handleCoordinateChange('longitude', text)}
-          placeholder="0"
-          keyboardType="numeric"
         />
 
         <View style={styles.button}>
           <Button
             title={isSubmitting ? 'Submitting...' : 'Create post'}
-            onPress={handleSubmit}
+            onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
           />
         </View>
@@ -162,31 +106,10 @@ const CreatePostForm = () => {
   );
 };
 
+// ... стили остаются без изменений (modalOverlay, modalCard и т.д.)
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-  },
-  label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#111',
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginBottom: 12,
-    backgroundColor: '#fff',
-  },
-  textArea: {
-    minHeight: 80,
-    textAlignVertical: 'top',
-  },
-  button: {
-    marginTop: 8,
-  },
+  container: { padding: 16 },
+  button: { marginTop: 8 },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -201,20 +124,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 20,
   },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-    color: '#111',
-  },
-  modalMessage: {
-    fontSize: 14,
-    color: '#444',
-    marginBottom: 16,
-  },
-  modalButton: {
-    alignSelf: 'flex-end',
-  },
+  modalTitle: { fontSize: 18, fontWeight: '600', marginBottom: 8, color: '#111' },
+  modalMessage: { fontSize: 14, color: '#444', marginBottom: 16 },
+  modalButton: { alignSelf: 'flex-end' },
 });
 
 export default CreatePostForm;
