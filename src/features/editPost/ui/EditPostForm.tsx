@@ -21,13 +21,14 @@ const EditPostForm = ({ post }: EditPostFormProps) => {
   } = useForm<EditPostFormValues>({
     resolver: zodResolver(editPostSchema),
     defaultValues: {
-      id: post.id ?? '',
-      title: post.title ?? '',
-      description: post.description ?? '',
-      status: post.status ?? 'open',
-      customerId: post.customerId ?? '',
-      customer: post.customer ?? '',
-      location: post.location ?? '',
+      id: post.id,
+      title: post.title,
+      description: post.description,
+      status: post.status,
+      customer: post.customer,
+      location: post.location,
+      latitude: post.latitude ?? -90,
+      longitude: post.longitude ?? -180,
     },
   });
 

@@ -5,8 +5,7 @@ export interface EditPostParams {
   id: string;
   title: string;
   description: string;
-  status?: ProgressStatus;
-  customerId: string;
+  status: ProgressStatus;
   customer: string;
   location: string;
   latitude: number;
@@ -25,10 +24,12 @@ export const editPostSchema = z.object({
     .trim()
     .min(1, 'Description cannot be empty')
     .max(5000, 'Description is too long (max 5000 characters)'),
-  status: z
-    .enum([PostStatus.OPEN, PostStatus.INPROGRESS, PostStatus.COMPLETED, PostStatus.CANCELED])
-    .optional(),
-  customerId: z.string().trim().min(1, 'Customer ID cannot be empty'),
+  status: z.enum([
+    PostStatus.OPEN,
+    PostStatus.INPROGRESS,
+    PostStatus.COMPLETED,
+    PostStatus.CANCELED,
+  ]),
   customer: z
     .string()
     .trim()
