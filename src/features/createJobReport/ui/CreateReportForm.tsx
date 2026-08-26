@@ -3,13 +3,8 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { createJobReport } from '../model/createJobReport';
-import { CreateReportFormValues, createReportSchema } from '../types';
+import { CreateReportFormProps, CreateReportFormValues, createReportSchema } from '../types';
 import FormInput from './FormInput';
-
-type CreateReportFormProps = {
-  jobId: string;
-  onCreated?: () => void;
-};
 
 const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
   const [notification, setNotification] = useState({
@@ -43,8 +38,8 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
         arrivalAt: new Date(data.arrivalAt),
         startedAt: new Date(data.startedAt),
         finishedAt: new Date(data.finishedAt),
-        customerSignatureUri: data.customerSignatureUri || undefined,
-        documentScanUri: data.documentScanUri || undefined,
+        customerSignatureUri: data.customerSignatureUri,
+        documentScanUri: data.documentScanUri,
       });
       setNotification({
         visible: true,

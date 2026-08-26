@@ -11,12 +11,10 @@ export const createJobReport = async ({
   customerSignatureUri,
   documentScanUri,
 }: CreateJobReportInput) => {
-  let createdReport: JobReport;
-
   await database.write(async () => {
     const reportsCollection = database.get<JobReport>(TableNames.JOBREPORTS);
 
-    createdReport = await reportsCollection.create((report) => {
+    await reportsCollection.create((report) => {
       report.job_id = jobId;
       report.description = description;
       report.arrival_at = arrivalAt;
@@ -32,6 +30,4 @@ export const createJobReport = async ({
       }
     });
   });
-
-  return createdReport!;
 };

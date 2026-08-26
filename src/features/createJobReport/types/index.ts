@@ -1,3 +1,4 @@
+import { Control } from 'react-hook-form';
 import { z } from 'zod';
 
 const dateTimeField = (label: string) =>
@@ -33,3 +34,16 @@ export const createReportSchema = z
 
 export type CreateReportFormValues = z.infer<typeof createReportSchema>;
 export type CreateReportFormFields = keyof CreateReportFormValues;
+
+export type CreateReportFormProps = {
+  jobId: string;
+  onCreated?: () => void;
+};
+
+export interface FormInputProps {
+  title: string;
+  name: CreateReportFormFields;
+  control: Control<CreateReportFormValues>;
+  multiline?: boolean;
+  placeholder?: string;
+}

@@ -1,15 +1,7 @@
 import React from 'react';
-import { Control, Controller } from 'react-hook-form';
+import { Controller } from 'react-hook-form';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { CreateReportFormFields, CreateReportFormValues } from '../types';
-
-interface FormInputProps {
-  title: string;
-  name: CreateReportFormFields;
-  control: Control<CreateReportFormValues>;
-  multiline?: boolean;
-  placeholder?: string;
-}
+import { FormInputProps } from '../types';
 
 const FormInput = ({ title, name, control, multiline, placeholder }: FormInputProps) => (
   <Controller
