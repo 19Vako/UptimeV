@@ -6,7 +6,12 @@ import { createJobReport } from '../model/createJobReport';
 import { CreateReportFormProps, CreateReportFormValues, createReportSchema } from '../types';
 import FormInput from './FormInput';
 
-const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
+const CreateReportForm = ({
+  jobId,
+  customerSignatureUri,
+  documentScanUri,
+  onCreated,
+}: CreateReportFormProps) => {
   const [notification, setNotification] = useState({
     visible: false,
     title: '',
@@ -25,8 +30,6 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
       arrivalAt: '',
       startedAt: '',
       finishedAt: '',
-      customerSignatureUri: '',
-      documentScanUri: '',
     },
   });
 
@@ -38,8 +41,8 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
         arrivalAt: new Date(data.arrivalAt),
         startedAt: new Date(data.startedAt),
         finishedAt: new Date(data.finishedAt),
-        customerSignatureUri: data.customerSignatureUri,
-        documentScanUri: data.documentScanUri,
+        customerSignatureUri: customerSignatureUri,
+        documentScanUri: documentScanUri,
       });
       setNotification({
         visible: true,
