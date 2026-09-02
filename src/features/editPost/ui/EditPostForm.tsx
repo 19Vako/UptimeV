@@ -2,11 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { createJobPost } from '../model/createJobPost';
-import { CreatePostFormValues, createPostSchema } from '../types';
+import { editPost } from '../model/editPost';
+import { EditPostFormProps, EditPostFormValues, editPostSchema } from '../types';
 import FormInput from './FormInput';
 
-const CreatePostForm = () => {
+const EditPostForm = ({ post }: EditPostFormProps) => {
   const [notification, setNotification] = useState({
     visible: false,
     title: '',
@@ -18,16 +18,17 @@ const CreatePostForm = () => {
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<CreatePostFormValues>({
-    resolver: zodResolver(createPostSchema),
+  } = useForm<EditPostFormValues>({
+    resolver: zodResolver(editPostSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      customerId: '0000',
-      customer: '',
-      location: '',
-      latitude: 0,
-      longitude: 0,
+      id: post.id,
+      title: post.title,
+      description: post.description,
+      status: post.status,
+      customer: post.customer,
+      location: post.location,
+      latitude: post.latitude ?? -90,
+      longitude: post.longitude ?? -180,
     },
   });
 
@@ -35,15 +36,15 @@ const CreatePostForm = () => {
     setNotification({ visible: true, title, message });
   };
 
-  const onSubmit = async (data: CreatePostFormValues) => {
+  const onSubmit = async (data: EditPostFormValues) => {
     try {
-      await createJobPost(data);
-      showNotification('Success', 'Post created successfully');
-      reset();
+      await editPost(data);
+      showNotification('Success', 'Post updated successfully');
+      reset(data);
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create post';
+      const errorMessage = error instanceof Error ? error.message : 'Failed to update post';
       showNotification('Error', errorMessage);
-      console.error('Create post error:', error);
+      console.error('Edit post error:', error);
     }
   };
 
@@ -59,6 +60,8 @@ const CreatePostForm = () => {
           placeholder="Description"
           multiline
         />
+
+        <FormInput title="Status" name="status" control={control} placeholder="open" />
 
         <FormInput
           title="Customer (name)"
@@ -76,7 +79,7 @@ const CreatePostForm = () => {
 
         <View style={styles.button}>
           <Button
-            title={isSubmitting ? 'Submitting...' : 'Create post'}
+            title={isSubmitting ? 'Saving...' : 'Update post'}
             onPress={handleSubmit(onSubmit)}
             disabled={isSubmitting}
           />
@@ -106,9 +109,21 @@ const CreatePostForm = () => {
   );
 };
 
-// ... стили остаются без изменений (modalOverlay, modalCard и т.д.)
 const styles = StyleSheet.create({
   container: { padding: 16 },
+  inputContainer: { marginBottom: 12 },
+  label: { fontSize: 14, marginBottom: 6, color: '#111' },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    backgroundColor: '#fff',
+  },
+  inputError: { borderColor: 'red' },
+  textArea: { minHeight: 80, textAlignVertical: 'top' },
+  errorText: { color: 'red', fontSize: 12, marginTop: 4 },
   button: { marginTop: 8 },
   modalOverlay: {
     flex: 1,
@@ -129,4 +144,4 @@ const styles = StyleSheet.create({
   modalButton: { alignSelf: 'flex-end' },
 });
 
-export default CreatePostForm;
+export default EditPostForm;

@@ -1,16 +1,19 @@
+import { PostStatus, ProgressStatus } from '@/entities/jobPost';
 import { z } from 'zod';
 
-export interface CreatePostArgs {
+export interface EditPostParams {
+  id: string;
   title: string;
   description: string;
-  customerId: string;
-  location: string;
+  status: ProgressStatus;
   customer: string;
+  location: string;
   latitude: number;
   longitude: number;
 }
 
-export const createPostSchema = z.object({
+export const editPostSchema = z.object({
+  id: z.string().trim().min(1, 'Post ID cannot be empty'),
   title: z
     .string()
     .trim()
@@ -21,7 +24,12 @@ export const createPostSchema = z.object({
     .trim()
     .min(1, 'Description cannot be empty')
     .max(5000, 'Description is too long (max 5000 characters)'),
-  customerId: z.string().trim().min(1, 'Customer ID cannot be empty'),
+  status: z.enum([
+    PostStatus.OPEN,
+    PostStatus.INPROGRESS,
+    PostStatus.COMPLETED,
+    PostStatus.CANCELED,
+  ]),
   customer: z
     .string()
     .trim()
@@ -42,5 +50,8 @@ export const createPostSchema = z.object({
     .max(180, 'Longitude must be between -180 and 180'),
 });
 
-export type CreatePostFormValues = z.infer<typeof createPostSchema>;
-export type CreatePostFormFields = keyof CreatePostFormValues;
+export type EditPostFormValues = z.infer<typeof editPostSchema>;
+export type EditPostFormFields = keyof EditPostFormValues;
+export type EditPostFormProps = {
+  post: Partial<EditPostFormValues> & { id: string };
+};
