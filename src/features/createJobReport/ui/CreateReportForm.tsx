@@ -89,18 +89,6 @@ const CreateReportForm = ({
           control={control}
           placeholder="2026-08-24T17:00"
         />
-        <FormInput
-          title="Customer signature URI"
-          name="customerSignatureUri"
-          control={control}
-          placeholder="Optional file URI"
-        />
-        <FormInput
-          title="Document scan URI"
-          name="documentScanUri"
-          control={control}
-          placeholder="Optional file URI"
-        />
         <View style={styles.button}>
           <Button
             title={isSubmitting ? 'Creating...' : 'Create report'}
@@ -134,7 +122,7 @@ const CreateReportForm = ({
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
+  container: { padding: 16, paddingTop: 0 },
   button: { marginTop: 8 },
   modalOverlay: {
     flex: 1,
