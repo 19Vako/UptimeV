@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function index() {
+export default function jobPost() {
   return (
     <View>
-      <Text>LogInkvmkskmlvkmlsmkvkmsvmklsvkmlsvklmsvkmsvmklsvmksv</Text>
+      <Text>jobPost</Text>
     </View>
   );
 }
