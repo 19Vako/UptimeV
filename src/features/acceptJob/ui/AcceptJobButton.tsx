@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { acceptJob } from '../model/acceptJob';
+import { AcceptJobButtonProps } from '../type';
 
-type AcceptJobButtonProps = {
-  postId: string;
-};
-
-const AcceptJobButton = ({ postId }: AcceptJobButtonProps) => {
+const AcceptJobButton = ({ postId, onAccepted }: AcceptJobButtonProps) => {
   const [isAccepting, setIsAccepting] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -18,6 +15,7 @@ const AcceptJobButton = ({ postId }: AcceptJobButtonProps) => {
     try {
       await acceptJob(postId);
       setIsAccepted(true);
+      onAccepted?.();
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Failed to accept the job');
     } finally {
