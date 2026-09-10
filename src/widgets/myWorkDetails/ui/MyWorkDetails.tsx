@@ -204,15 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: '#16805D',
   },
-  cancelButton: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 54,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#D65A3A',
-    backgroundColor: '#FFFFFF',
-  },
+
   buttonPressed: {
     opacity: 0.82,
   },
@@ -221,11 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '800',
   },
-  cancelButtonText: {
-    color: '#B4472E',
-    fontSize: 16,
-    fontWeight: '800',
-  },
+
   state: {
     flex: 1,
     marginTop: 32,
