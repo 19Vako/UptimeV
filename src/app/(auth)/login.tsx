@@ -1,10 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-
-export default function index() {
+export default function login() {
   return (
     <View>
-      <Text>index</Text>
+      <Text>login</Text>
     </View>
   );
 }

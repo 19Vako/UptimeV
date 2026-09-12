@@ -6,7 +6,12 @@ import { createJobReport } from '../model/createJobReport';
 import { CreateReportFormProps, CreateReportFormValues, createReportSchema } from '../types';
 import FormInput from './FormInput';
 
-const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
+const CreateReportForm = ({
+  jobId,
+  customerSignatureUri,
+  documentScanUri,
+  onCreated,
+}: CreateReportFormProps) => {
   const [notification, setNotification] = useState({
     visible: false,
     title: '',
@@ -25,8 +30,6 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
       arrivalAt: '',
       startedAt: '',
       finishedAt: '',
-      customerSignatureUri: '',
-      documentScanUri: '',
     },
   });
 
@@ -38,8 +41,8 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
         arrivalAt: new Date(data.arrivalAt),
         startedAt: new Date(data.startedAt),
         finishedAt: new Date(data.finishedAt),
-        customerSignatureUri: data.customerSignatureUri,
-        documentScanUri: data.documentScanUri,
+        customerSignatureUri: customerSignatureUri,
+        documentScanUri: documentScanUri,
       });
       setNotification({
         visible: true,
@@ -86,18 +89,6 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
           control={control}
           placeholder="2026-08-24T17:00"
         />
-        <FormInput
-          title="Customer signature URI"
-          name="customerSignatureUri"
-          control={control}
-          placeholder="Optional file URI"
-        />
-        <FormInput
-          title="Document scan URI"
-          name="documentScanUri"
-          control={control}
-          placeholder="Optional file URI"
-        />
         <View style={styles.button}>
           <Button
             title={isSubmitting ? 'Creating...' : 'Create report'}
@@ -131,7 +122,7 @@ const CreateReportForm = ({ jobId, onCreated }: CreateReportFormProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 16 },
+  container: { padding: 16, paddingTop: 0 },
   button: { marginTop: 8 },
   modalOverlay: {
     flex: 1,

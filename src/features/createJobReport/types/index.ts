@@ -37,6 +37,8 @@ export type CreateReportFormFields = keyof CreateReportFormValues;
 
 export type CreateReportFormProps = {
   jobId: string;
+  customerSignatureUri?: string;
+  documentScanUri?: string;
   onCreated?: () => void;
 };
 
