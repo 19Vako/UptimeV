@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
   statusBadge: {
     paddingHorizontal: 10,
     paddingVertical: 4,
-    backgroundColor: '#F2F4FF',
+    backgroundColor: '#E0F2EC',
     borderRadius: 999,
   },
   statusText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#1D4ED8',
+    color: '#176A51',
   },
   row: {
     flexDirection: 'row',
