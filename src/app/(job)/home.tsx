@@ -1,10 +1,6 @@
+import { Home } from '@/pages/home/ui/Home';
 import React from 'react';
-import { Text, View } from 'react-native';
 
 export default function JobIndex() {
-  return (
-    <View>
-      <Text>Home</Text>
-    </View>
-  );
+  return <Home />;
 }
