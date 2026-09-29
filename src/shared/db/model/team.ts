@@ -19,5 +19,5 @@ export default class Team extends Model {
   @children(TableNames.JOBREPORTS) jobReports!: Query<JobReport>;
   @children(TableNames.JOBPOSTS) jobPosts!: Query<JobPost>;
   @date('created_at') createdAt!: Date;
-  @date('updated_at') updatedAt!: Date;
+  @date('updated_at') updatedAt?: Date;
 }
