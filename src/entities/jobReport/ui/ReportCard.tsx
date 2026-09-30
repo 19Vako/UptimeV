@@ -10,7 +10,7 @@ export default function ReportCard({ jobReport }: JobReportCardProps) {
           Job report
         </Text>
         <Text style={styles.jobId} numberOfLines={1}>
-          Job: {jobReport.job_id}
+          Job: {jobReport.jobId}
         </Text>
       </View>
 
