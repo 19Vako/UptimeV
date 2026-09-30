@@ -1,10 +1,10 @@
+import { FALLBACK_TEAM_ID } from '@/shared/constants/mock';
 import InProgressJobs from '@/widgets/InProgressJobs';
 import PastJobReports from '@/widgets/pastJobReports';
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export const MyWorksPage = () => {
-  const teamId = 'HiQkosmUT9FvpXa7';
   const [activeTab, setActiveTab] = useState<'inProgress' | 'past'>('inProgress');
 
   return (
@@ -29,9 +29,9 @@ export const MyWorksPage = () => {
 
       <View style={styles.content}>
         {activeTab === 'inProgress' ? (
-          <InProgressJobs teamId={teamId} />
+          <InProgressJobs teamId={FALLBACK_TEAM_ID} />
         ) : (
-          <PastJobReports teamId={teamId} />
+          <PastJobReports teamId={FALLBACK_TEAM_ID} />
         )}
       </View>
     </View>
