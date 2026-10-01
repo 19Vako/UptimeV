@@ -3,7 +3,7 @@ import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 import { acceptJob } from '../model/acceptJob';
 import { AcceptJobButtonProps } from '../type';
 
-const AcceptJobButton = ({ postId, onAccepted }: AcceptJobButtonProps) => {
+const AcceptJobButton = ({ postId, teamId, onAccepted }: AcceptJobButtonProps) => {
   const [isAccepting, setIsAccepting] = useState(false);
   const [isAccepted, setIsAccepted] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -13,7 +13,7 @@ const AcceptJobButton = ({ postId, onAccepted }: AcceptJobButtonProps) => {
     setErrorMessage(null);
 
     try {
-      await acceptJob(postId);
+      await acceptJob({ postId, teamId });
       setIsAccepted(true);
       onAccepted?.();
     } catch (error) {
