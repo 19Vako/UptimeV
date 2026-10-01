@@ -6,7 +6,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-nat
 import { JobPost, JobPostDetailsProps } from '../type';
 import { ExpandableDetailItem } from './ExpandableDetailItem';
 
-export function JobPostDetails({ id }: JobPostDetailsProps) {
+export function JobPostDetails({ teamId, postId }: JobPostDetailsProps) {
   const [post, setPost] = useState<JobPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<null | string>(null);
@@ -17,7 +17,7 @@ export function JobPostDetails({ id }: JobPostDetailsProps) {
     setLoading(true);
     setError(null);
 
-    getPostById(id)
+    getPostById(postId)
       .then((loadedPost) => {
         if (isMounted) {
           setPost(loadedPost);
@@ -37,7 +37,7 @@ export function JobPostDetails({ id }: JobPostDetailsProps) {
     return () => {
       isMounted = false;
     };
-  }, [id]);
+  }, [postId]);
 
   if (loading) {
     return <ActivityIndicator style={styles.state} />;
@@ -75,11 +75,12 @@ export function JobPostDetails({ id }: JobPostDetailsProps) {
       </View>
 
       <AcceptJobButton
-        postId={id}
+        postId={postId}
+        teamId={teamId}
         onAccepted={() =>
           router.push({
-            pathname: '/(job)/myWorks',
-            params: { id: id },
+            pathname: '/(job)/(tabs)/myWorks',
+            params: { id: postId },
           })
         }
       />
