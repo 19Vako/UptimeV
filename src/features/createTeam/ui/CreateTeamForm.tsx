@@ -79,7 +79,7 @@ export const CreateTeamForm = ({ onSuccess }: { onSuccess?: () => void }) => {
               <TextInput
                 style={[styles.input, errors.membersCount && styles.errorInput]}
                 value={value ? String(value) : ''}
-                onChangeText={onChange}
+                onChangeText={(text) => onChange(Number(text))}
                 onBlur={onBlur}
                 placeholder="1"
                 keyboardType="numeric"
