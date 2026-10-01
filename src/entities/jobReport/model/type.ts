@@ -6,6 +6,7 @@ export type JobReportCardProps = {
 
 export type CreateJobReportInput = {
   jobId: string;
+  teamId: string;
   description: string;
   arrivalAt: Date;
   startedAt: Date;
