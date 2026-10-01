@@ -1,3 +1,4 @@
+import { FALLBACK_TEAM_ID } from '@/shared/constants/mock';
 import JobPostDetails from '@/widgets/jobPostDetails';
 import { router } from 'expo-router';
 import React from 'react';
@@ -11,7 +12,7 @@ export const JobPostPage = ({ id }: { id: string }) => {
           {'←'}
         </Text>
       </Pressable>
-      <JobPostDetails id={id} />
+      <JobPostDetails teamId={FALLBACK_TEAM_ID} postId={id} />
     </View>
   );
 };
