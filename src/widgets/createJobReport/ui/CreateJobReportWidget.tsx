@@ -3,7 +3,7 @@ import { scanDocument } from '@/features/scanDocument';
 import React, { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 
-export const CreateJobReportWidget = ({ id }: { id: string }) => {
+export const CreateJobReportWidget = ({ id, teamId }: { id: string; teamId: string }) => {
   const [scanUri, setScanUri] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
 
@@ -42,6 +42,7 @@ export const CreateJobReportWidget = ({ id }: { id: string }) => {
 
       <CreateReportForm
         jobId={id}
+        teamId={teamId}
         documentScanUri={scanUri ?? ''}
         onCreated={() => {
           setScanUri(null);
