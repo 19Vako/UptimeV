@@ -8,6 +8,7 @@ import FormInput from './FormInput';
 
 const CreateReportForm = ({
   jobId,
+  teamId,
   customerSignatureUri,
   documentScanUri,
   onCreated,
@@ -37,6 +38,7 @@ const CreateReportForm = ({
     try {
       await createJobReport({
         jobId,
+        teamId,
         description: data.description,
         arrivalAt: new Date(data.arrivalAt),
         startedAt: new Date(data.startedAt),
