@@ -4,8 +4,9 @@ import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { JobPost, JobPostDetailsProps } from '../type';
+import { ExpandableDetailItem } from './ExpandableDetailItem';
 
-export function JobPostDetails({ id }: JobPostDetailsProps) {
+export function JobPostDetails({ teamId, postId }: JobPostDetailsProps) {
   const [post, setPost] = useState<JobPost | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<null | string>(null);
@@ -16,7 +17,7 @@ export function JobPostDetails({ id }: JobPostDetailsProps) {
     setLoading(true);
     setError(null);
 
-    getPostById(id)
+    getPostById(postId)
       .then((loadedPost) => {
         if (isMounted) {
           setPost(loadedPost);
@@ -36,7 +37,7 @@ export function JobPostDetails({ id }: JobPostDetailsProps) {
     return () => {
       isMounted = false;
     };
-  }, [id]);
+  }, [postId]);
 
   if (loading) {
     return <ActivityIndicator style={styles.state} />;
@@ -62,41 +63,24 @@ export function JobPostDetails({ id }: JobPostDetailsProps) {
         </View>
         <Text style={styles.title}>{post.title || 'Untitled post'}</Text>
       </View>
-
-      <View style={styles.descriptionBlock}>
-        <Text style={styles.label}>Description</Text>
-        <Text style={styles.description}>{post.description || 'No description available'}</Text>
-      </View>
-
       <View style={styles.detailsGrid}>
-        <View style={styles.detailItem}>
-          <Text style={styles.label}>Customer</Text>
-          <Text style={styles.value} numberOfLines={2}>
-            {post.customer || 'Not specified'}
-          </Text>
-        </View>
-        <View style={styles.detailItem}>
-          <Text style={styles.label}>Address</Text>
-          <Text style={styles.value} numberOfLines={2}>
-            {post.location || 'Not specified'}
-          </Text>
-        </View>
-        <View style={styles.detailItem}>
-          <Text style={styles.label}>Created</Text>
-          <Text style={styles.value}>{post.createdAt.toLocaleDateString()}</Text>
-        </View>
-        <View style={styles.detailItem}>
-          <Text style={styles.label}>Updated</Text>
-          <Text style={styles.value}>{post.updatedAt.toLocaleDateString()}</Text>
-        </View>
+        <ExpandableDetailItem
+          label="Description"
+          value={post.description || 'No description available'}
+        />
+        <ExpandableDetailItem label="Customer" value={post.customer || 'Not specified'} />
+        <ExpandableDetailItem label="Address" value={post.location || 'Not specified'} />
+        <ExpandableDetailItem label="Created" value={post.createdAt.toLocaleDateString()} />
+        <ExpandableDetailItem label="Updated" value={post.updatedAt.toLocaleDateString()} />
       </View>
 
       <AcceptJobButton
-        postId={id}
+        postId={postId}
+        teamId={teamId}
         onAccepted={() =>
           router.push({
-            pathname: '/(job)/myWorks',
-            params: { id: id },
+            pathname: '/(job)/(tabs)/myWorks',
+            params: { id: postId },
           })
         }
       />
@@ -167,30 +151,16 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   detailsGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     gap: 10,
   },
-  detailItem: {
-    width: '48%',
-    minHeight: 90,
-    padding: 14,
-    borderRadius: 14,
-    backgroundColor: '#E9F0ED',
-    gap: 4,
-  },
   label: {
-    fontSize: 10,
+    fontSize: 11,
+    lineHeight: 15,
     fontWeight: '800',
     color: '#71807C',
-    letterSpacing: 0.7,
+    letterSpacing: 0.9,
     textTransform: 'uppercase',
-  },
-  value: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '600',
-    color: '#26332F',
   },
   acceptButton: {
     flexDirection: 'row',

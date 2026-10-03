@@ -1,12 +1,5 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import CreateJobPostPage from '@/pages/createJobPost';
 
 export default function CreateJobPost() {
-  return (
-    <View>
-      <Text>createJobPost</Text>
-    </View>
-  );
+  return <CreateJobPostPage />;
 }
-
-const styles = StyleSheet.create({});

@@ -11,6 +11,7 @@ export const schema = appSchema({
         { name: 'description', type: 'string' },
         { name: 'status', type: 'string' },
         { name: 'customer_id', type: 'string' },
+        { name: 'assigned_team_id', type: 'string', isOptional: true },
         { name: 'customer', type: 'string' },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
@@ -33,6 +34,7 @@ export const schema = appSchema({
       name: TableNames.JOBREPORTS,
       columns: [
         { name: 'job_id', type: 'string' },
+        { name: 'team_id', type: 'string' },
         { name: 'description', type: 'string' },
         { name: 'arrival_at', type: 'number' },
         { name: 'started_at', type: 'number' },
@@ -43,16 +45,13 @@ export const schema = appSchema({
     }),
 
     tableSchema({
-      name: TableNames.SYNCQUEUE,
+      name: TableNames.TEAMS,
       columns: [
-        { name: 'entity_type', type: 'string' },
-        { name: 'entity_id', type: 'string' },
-        { name: 'operation', type: 'string' },
+        { name: 'team_name', type: 'string' },
+        { name: 'members_count', type: 'number' },
         { name: 'status', type: 'string' },
-        { name: 'retry_count', type: 'number' },
         { name: 'created_at', type: 'number' },
-        { name: 'last_attempt_at', type: 'number', isOptional: true },
-        { name: 'error_message', type: 'string', isOptional: true },
+        { name: 'updated_at', type: 'number' },
       ],
     }),
   ],

@@ -1,4 +1,8 @@
-export type CancelJobProgressButtonProps = {
-  postId: string;
+export type CancelJobProgressInput = {
+  jobId: string;
+  teamId: string;
+};
+
+export type CancelJobProgressButtonProps = CancelJobProgressInput & {
   onCancelled?: () => void;
 };

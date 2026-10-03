@@ -1,9 +1,10 @@
 import { CreateJobReportInput } from '@/entities/jobReport';
 import { TableNames } from '@/shared/constants/table-names';
-import { database, JobReport } from '@/shared/db';
+import { database, JobPost, JobReport } from '@/shared/db';
 
 export const createJobReport = async ({
   jobId,
+  teamId,
   description,
   arrivalAt,
   startedAt,
@@ -12,10 +13,17 @@ export const createJobReport = async ({
   documentScanUri,
 }: CreateJobReportInput) => {
   await database.write(async () => {
+    const job = await database.get<JobPost>(TableNames.JOBPOSTS).find(jobId);
+
+    if (job.assignedTeamId !== teamId) {
+      throw new Error('Job is not assigned to this team');
+    }
+
     const reportsCollection = database.get<JobReport>(TableNames.JOBREPORTS);
 
     await reportsCollection.create((report) => {
-      report.job_id = jobId;
+      report.jobId = jobId;
+      report.teamId = teamId;
       report.description = description;
       report.arrival_at = arrivalAt;
       report.started_at = startedAt;

@@ -3,17 +3,17 @@ import { useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 
 export default function CreateReport() {
-  const { id } = useLocalSearchParams<{ id?: string }>();
+  const { id, teamId } = useLocalSearchParams<{ id?: string; teamId?: string }>();
 
-  if (!id?.trim()) {
+  if (!id?.trim() || !teamId?.trim()) {
     return (
       <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>Report ID not found</Text>
+        <Text style={styles.errorText}>Job or team ID not found</Text>
       </View>
     );
   }
 
-  return <CreateJobReport id={id.trim()} />;
+  return <CreateJobReport id={id.trim()} teamId={teamId.trim()} />;
 }
 
 const styles = StyleSheet.create({

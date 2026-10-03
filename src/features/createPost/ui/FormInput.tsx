@@ -29,6 +29,7 @@ const FormInput = ({ title, name, control, multiline, placeholder }: FormInputPr
             onChangeText={onChange}
             onBlur={onBlur}
             placeholder={placeholder}
+            placeholderTextColor="#9AA8A3"
             multiline={multiline}
           />
           {error && <Text style={styles.errorText}>{error.message}</Text>}
@@ -40,30 +41,35 @@ const FormInput = ({ title, name, control, multiline, placeholder }: FormInputPr
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 12,
+    marginBottom: 16,
   },
   label: {
-    fontSize: 14,
-    marginBottom: 6,
-    color: '#111',
+    marginBottom: 7,
+    color: '#71807C',
+    fontSize: 11,
+    fontWeight: '800',
+    letterSpacing: 0.9,
+    textTransform: 'uppercase',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    backgroundColor: '#fff',
+    borderColor: '#E2EAE7',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+    backgroundColor: '#FFFFFF',
+    color: '#17211F',
+    fontSize: 16,
   },
   inputError: {
-    borderColor: 'red',
+    borderColor: '#C94E3A',
   },
   textArea: {
-    minHeight: 80,
+    minHeight: 112,
     textAlignVertical: 'top',
   },
   errorText: {
-    color: 'red',
+    color: '#C94E3A',
     fontSize: 12,
     marginTop: 4,
   },

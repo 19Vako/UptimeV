@@ -1,5 +1,11 @@
 export { JobPost } from '@/shared/db';
 
 export interface JobPostDetailsProps {
-  id: string;
+  postId: string;
+  teamId: string;
 }
+
+export type ExpandableDetailItemProps = {
+  label: string;
+  value: string;
+};
