@@ -3,7 +3,7 @@ import { ActivityIndicator, Alert, Pressable, StyleSheet, Text } from 'react-nat
 import { cancelJobProgress } from '../model/cancelJobProgress';
 import { CancelJobProgressButtonProps } from '../type';
 
-const CancelJobProgressButton = ({ postId, onCancelled }: CancelJobProgressButtonProps) => {
+const CancelJobProgressButton = ({ jobId, teamId, onCancelled }: CancelJobProgressButtonProps) => {
   const [isCancelling, setIsCancelling] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -13,7 +13,7 @@ const CancelJobProgressButton = ({ postId, onCancelled }: CancelJobProgressButto
     setErrorMessage(null);
 
     try {
-      await cancelJobProgress(postId);
+      await cancelJobProgress({ jobId, teamId });
       setIsCancelled(true);
       onCancelled?.();
     } catch (error) {
