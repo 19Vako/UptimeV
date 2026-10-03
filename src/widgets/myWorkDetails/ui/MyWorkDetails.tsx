@@ -1,6 +1,5 @@
 import { CancelJobProgressButton } from '@/features/cancelJobProgress';
 import { getPostById } from '@/features/getPosts';
-import { FALLBACK_TEAM_ID } from '@/shared/constants/mock';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -45,6 +44,10 @@ export function MyWorkDetails({ id }: MyWorkDetailsProps) {
 
   if (error) {
     return <Text style={styles.stateText}>{error}</Text>;
+  }
+
+  if (!post?.assignedTeamId) {
+    return <Text style={styles.stateText}>Job is not assigned to a team</Text>;
   }
 
   return (
@@ -94,14 +97,14 @@ export function MyWorkDetails({ id }: MyWorkDetailsProps) {
           onPress={() =>
             router.push({
               pathname: '/(job)/createReport',
-              params: { id, teamId: FALLBACK_TEAM_ID },
+              params: { id, teamId: post.assignedTeamId },
             })
           }
           style={({ pressed }) => [styles.completeButton, pressed && styles.buttonPressed]}
         >
           <Text style={styles.completeButtonText}>Finish</Text>
         </Pressable>
-        <CancelJobProgressButton jobId={id} teamId={FALLBACK_TEAM_ID} />
+        <CancelJobProgressButton jobId={id} teamId={post.assignedTeamId} />
       </View>
     </ScrollView>
   );
