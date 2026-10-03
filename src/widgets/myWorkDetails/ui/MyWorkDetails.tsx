@@ -46,6 +46,10 @@ export function MyWorkDetails({ id }: MyWorkDetailsProps) {
     return <Text style={styles.stateText}>{error}</Text>;
   }
 
+  if (!post?.assignedTeamId) {
+    return <Text style={styles.stateText}>Job is not assigned to a team</Text>;
+  }
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -93,14 +97,14 @@ export function MyWorkDetails({ id }: MyWorkDetailsProps) {
           onPress={() =>
             router.push({
               pathname: '/(job)/createReport',
-              params: { id: id },
+              params: { id, teamId: post.assignedTeamId },
             })
           }
           style={({ pressed }) => [styles.completeButton, pressed && styles.buttonPressed]}
         >
           <Text style={styles.completeButtonText}>Finish</Text>
         </Pressable>
-        <CancelJobProgressButton postId={id} />
+        <CancelJobProgressButton jobId={id} teamId={post.assignedTeamId} />
       </View>
     </ScrollView>
   );
