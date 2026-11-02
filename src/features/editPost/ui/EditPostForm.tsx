@@ -1,10 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Modal, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Button, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { TASK_TYPE_LABELS, type TaskType } from '@/entities/jobPost';
 import { editPost } from '../model/editPost';
 import { EditPostFormProps, EditPostFormValues, editPostSchema } from '../types';
 import FormInput from './FormInput';
+
+const toLocalDateTimeInput = (timestamp?: number) => {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+  const pad = (part: number) => String(part).padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(
+    date.getHours(),
+  )}:${pad(date.getMinutes())}`;
+};
 
 const EditPostForm = ({ post }: EditPostFormProps) => {
   const [notification, setNotification] = useState({
@@ -17,6 +27,8 @@ const EditPostForm = ({ post }: EditPostFormProps) => {
     control,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { isSubmitting },
   } = useForm<EditPostFormValues>({
     resolver: zodResolver(editPostSchema),
@@ -27,8 +39,10 @@ const EditPostForm = ({ post }: EditPostFormProps) => {
       status: post.status,
       customer: post.customer,
       location: post.location,
-      latitude: post.latitude ?? -90,
-      longitude: post.longitude ?? -180,
+      taskType: post.taskType ?? 'job_visit',
+      customerPhone: post.customerPhone ?? '',
+      scheduledStartTime: toLocalDateTimeInput(post.scheduledStartTime),
+      scheduledEndTime: toLocalDateTimeInput(post.scheduledEndTime),
     },
   });
 
@@ -75,6 +89,39 @@ const EditPostForm = ({ post }: EditPostFormProps) => {
           name="location"
           control={control}
           placeholder="Address or city"
+        />
+        <Text style={styles.label}>Task type</Text>
+        <View style={styles.taskTypes}>
+          {(Object.keys(TASK_TYPE_LABELS) as TaskType[]).map((taskType) => (
+            <TouchableOpacity
+              key={taskType}
+              onPress={() => setValue('taskType', taskType, { shouldValidate: true })}
+              style={[
+                styles.taskTypeButton,
+                watch('taskType') === taskType && styles.selectedTaskType,
+              ]}
+            >
+              <Text style={styles.taskTypeText}>{TASK_TYPE_LABELS[taskType]}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <FormInput
+          title="Customer phone (optional)"
+          name="customerPhone"
+          control={control}
+          placeholder="+1 555 123 4567"
+        />
+        <FormInput
+          title="Scheduled start (optional)"
+          name="scheduledStartTime"
+          control={control}
+          placeholder="2026-10-30T09:00"
+        />
+        <FormInput
+          title="Scheduled end (optional)"
+          name="scheduledEndTime"
+          control={control}
+          placeholder="2026-10-30T10:00"
         />
 
         <View style={styles.button}>
@@ -125,6 +172,17 @@ const styles = StyleSheet.create({
   textArea: { minHeight: 80, textAlignVertical: 'top' },
   errorText: { color: 'red', fontSize: 12, marginTop: 4 },
   button: { marginTop: 8 },
+  taskTypes: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 16 },
+  taskTypeButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 9,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#D5DED9',
+    backgroundColor: '#fff',
+  },
+  selectedTaskType: { borderColor: '#16805D', backgroundColor: '#E0F2EC' },
+  taskTypeText: { color: '#34413D', fontSize: 13, fontWeight: '600' },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',

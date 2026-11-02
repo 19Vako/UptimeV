@@ -9,6 +9,10 @@ export const createJobPost = async ({
   customerId,
   location,
   customer,
+  taskType,
+  customerPhone,
+  scheduledStartTime,
+  scheduledEndTime,
   latitude,
   longitude,
 }: CreatePostArgs) => {
@@ -19,9 +23,14 @@ export const createJobPost = async ({
       post.title = title;
       post.description = description;
       post.status = PostStatus.OPEN;
+      post.taskType = taskType;
+      post.timeSpent = 0;
       post.customerId = customerId;
       post.customer = customer;
       post.location = location;
+      post.customerPhone = customerPhone?.trim() || undefined;
+      post.scheduledStartTime = scheduledStartTime;
+      post.scheduledEndTime = scheduledEndTime;
       post.latitude = latitude;
       post.longitude = longitude;
     });
