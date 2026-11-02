@@ -1,5 +1,6 @@
 import { CancelJobProgressButton } from '@/features/cancelJobProgress';
 import { getPostById } from '@/features/getPosts';
+import { FALLBACK_TEAM_ID } from '@/shared/constants/mock';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -93,14 +94,14 @@ export function MyWorkDetails({ id }: MyWorkDetailsProps) {
           onPress={() =>
             router.push({
               pathname: '/(job)/createReport',
-              params: { id: id },
+              params: { id, teamId: FALLBACK_TEAM_ID },
             })
           }
           style={({ pressed }) => [styles.completeButton, pressed && styles.buttonPressed]}
         >
           <Text style={styles.completeButtonText}>Finish</Text>
         </Pressable>
-        <CancelJobProgressButton postId={id} />
+        <CancelJobProgressButton jobId={id} teamId={FALLBACK_TEAM_ID} />
       </View>
     </ScrollView>
   );

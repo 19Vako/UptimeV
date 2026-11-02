@@ -1,8 +1,10 @@
 import { AcceptJobButton } from '@/features/acceptJob';
+import { CancelJobProgressButton } from '@/features/cancelJobProgress';
 import { getPostById } from '@/features/getPosts';
+import JobPostHeader from '@/widgets/jobPostHeader';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { JobPost, JobPostDetailsProps } from '../type';
 import { ExpandableDetailItem } from './ExpandableDetailItem';
 
@@ -13,15 +15,27 @@ export function JobPostDetails({ teamId, postId }: JobPostDetailsProps) {
 
   useEffect(() => {
     let isMounted = true;
+    let unsubscribe: (() => void) | undefined;
 
     setLoading(true);
     setError(null);
 
     getPostById(postId)
       .then((loadedPost) => {
-        if (isMounted) {
-          setPost(loadedPost);
-        }
+        if (!isMounted) return;
+        const subscription = loadedPost.observe().subscribe({
+          next: (updatedPost) => {
+            setPost(updatedPost);
+            setLoading(false);
+          },
+          error: (observationError: unknown) =>
+            setError(
+              observationError instanceof Error
+                ? observationError.message
+                : 'Failed to observe post',
+            ),
+        });
+        unsubscribe = () => subscription.unsubscribe();
       })
       .catch(() => {
         if (isMounted) {
@@ -36,6 +50,7 @@ export function JobPostDetails({ teamId, postId }: JobPostDetailsProps) {
 
     return () => {
       isMounted = false;
+      unsubscribe?.();
     };
   }, [postId]);
 
@@ -53,16 +68,7 @@ export function JobPostDetails({ teamId, postId }: JobPostDetailsProps) {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.eyebrowRow}>
-          <Text style={styles.eyebrow}>JOB POST</Text>
-          <View style={styles.statusBadge}>
-            <View style={styles.statusDot} />
-            <Text style={styles.status}>{post.status}</Text>
-          </View>
-        </View>
-        <Text style={styles.title}>{post.title || 'Untitled post'}</Text>
-      </View>
+      <JobPostHeader post={post} />
       <View style={styles.detailsGrid}>
         <ExpandableDetailItem
           label="Description"
@@ -72,18 +78,55 @@ export function JobPostDetails({ teamId, postId }: JobPostDetailsProps) {
         <ExpandableDetailItem label="Address" value={post.location || 'Not specified'} />
         <ExpandableDetailItem label="Created" value={post.createdAt.toLocaleDateString()} />
         <ExpandableDetailItem label="Updated" value={post.updatedAt.toLocaleDateString()} />
+        <ExpandableDetailItem label="Task type" value={post.taskType.replace('_', ' ')} />
+        {post.customerPhone ? (
+          <ExpandableDetailItem label="Phone" value={post.customerPhone} />
+        ) : null}
+        {post.scheduledStartTime ? (
+          <ExpandableDetailItem
+            label="Scheduled"
+            value={`${new Date(post.scheduledStartTime).toLocaleString()}${
+              post.scheduledEndTime
+                ? ` – ${new Date(post.scheduledEndTime).toLocaleTimeString([], {
+                    hour: 'numeric',
+                    minute: '2-digit',
+                  })}`
+                : ''
+            }`}
+          />
+        ) : null}
       </View>
 
-      <AcceptJobButton
-        postId={postId}
-        teamId={teamId}
-        onAccepted={() =>
-          router.push({
-            pathname: '/(job)/(tabs)/myWorks',
-            params: { id: postId },
-          })
-        }
-      />
+      {post.status === 'open' ? (
+        <AcceptJobButton
+          postId={postId}
+          teamId={teamId}
+          onAccepted={() =>
+            router.push({
+              pathname: '/(job)/(tabs)/myWorks',
+              params: { id: postId },
+            })
+          }
+        />
+      ) : null}
+      {post.status === 'in_progress' || post.status === 'scheduled' ? (
+        <View style={styles.workActions}>
+          <Pressable
+            style={styles.finishButton}
+            onPress={() =>
+              router.push({
+                pathname: '/(job)/createReport',
+                params: { id: postId, teamId },
+              })
+            }
+          >
+            <Text style={styles.finishButtonText}>Create completion report</Text>
+          </Pressable>
+          {post.status === 'in_progress' ? (
+            <CancelJobProgressButton jobId={postId} teamId={teamId} />
+          ) : null}
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
@@ -94,61 +137,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F7F6',
     padding: 20,
     gap: 20,
-  },
-  header: {
-    paddingTop: 8,
-    gap: 10,
-  },
-  eyebrowRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  eyebrow: {
-    color: '#71807C',
-    fontSize: 11,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-  },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-    backgroundColor: '#E0F2EC',
-  },
-  statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 4,
-    backgroundColor: '#16805D',
-  },
-  title: {
-    fontSize: 30,
-    lineHeight: 35,
-    fontWeight: '800',
-    color: '#17211F',
-  },
-  status: {
-    color: '#176A51',
-    fontSize: 11,
-    fontWeight: '800',
-    textTransform: 'uppercase',
-  },
-  descriptionBlock: {
-    padding: 18,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#E2EAE7',
-    gap: 9,
-  },
-  description: {
-    color: '#34413D',
-    fontSize: 16,
-    lineHeight: 24,
   },
   detailsGrid: {
     flexDirection: 'column',
@@ -162,31 +150,15 @@ const styles = StyleSheet.create({
     letterSpacing: 0.9,
     textTransform: 'uppercase',
   },
-  acceptButton: {
-    flexDirection: 'row',
+  workActions: { gap: 12, paddingVertical: 4 },
+  finishButton: {
+    minHeight: 50,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    minHeight: 58,
-    paddingHorizontal: 18,
-    borderRadius: 16,
-    backgroundColor: '#D65A3A',
+    borderRadius: 14,
+    backgroundColor: '#16805D',
   },
-  acceptButtonPressed: {
-    opacity: 0.82,
-  },
-  acceptButtonDisabled: {
-    backgroundColor: '#B8C3BF',
-  },
-  acceptButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '800',
-  },
-  acceptButtonArrow: {
-    color: '#FFFFFF',
-    fontSize: 24,
-    fontWeight: '400',
-  },
+  finishButtonText: { color: '#fff', fontSize: 15, fontWeight: '800' },
   state: {
     flex: 1,
     marginTop: 32,

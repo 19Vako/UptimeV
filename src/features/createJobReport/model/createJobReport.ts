@@ -37,5 +37,16 @@ export const createJobReport = async ({
         report.document_scan_uri = documentScanUri;
       }
     });
+
+    await job.update((record) => {
+      record.status = 'completed';
+      if (record.startTime) {
+        record.timeSpent =
+          (record.timeSpent ?? 0) +
+          Math.max(0, Math.floor((finishedAt.getTime() - record.startTime) / 1000));
+      }
+      record.endTime = finishedAt.getTime();
+      record.startTime = undefined;
+    });
   });
 };
