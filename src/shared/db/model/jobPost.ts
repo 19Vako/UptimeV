@@ -25,7 +25,7 @@ export default class JobPost extends Model {
   @text('title') title!: string;
   @text('description') description!: string;
   @text('status') status!: string;
-  @text('task_type') taskType!: TaskType;
+  @text('task_type') taskType!: string;
   @field('time_spent') timeSpent?: number;
   @field('start_time') startTime?: number;
   @field('end_time') endTime?: number;
