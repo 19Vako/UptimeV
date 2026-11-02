@@ -1,3 +1,4 @@
+import type { TaskType } from '@/entities/jobPost/model/type';
 import { TableNames } from '@/shared/constants/table-names';
 import { Model, Query, Relation } from '@nozbe/watermelondb';
 import { Associations } from '@nozbe/watermelondb/Model';
@@ -24,7 +25,7 @@ export default class JobPost extends Model {
   @text('title') title!: string;
   @text('description') description!: string;
   @text('status') status!: string;
-  @text('task_type') taskType!: string;
+  @text('task_type') taskType!: TaskType;
   @field('time_spent') timeSpent?: number;
   @field('start_time') startTime?: number;
   @field('end_time') endTime?: number;
