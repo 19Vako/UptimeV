@@ -1,5 +1,6 @@
 import { CancelJobProgressButton } from '@/features/cancelJobProgress';
 import { getPostById } from '@/features/getPosts';
+import { FALLBACK_TEAM_ID } from '@/shared/constants/mock';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
