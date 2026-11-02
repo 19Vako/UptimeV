@@ -1,13 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { mockJobPost } from '../mocks/mockJobPost.mock';
-import { JobPostCardProps } from '../model/type';
+import { JobPostCardProps, TASK_TYPE_COLORS } from '../model/type';
 
-export default function JobPostCard({ jobPost = mockJobPost }: JobPostCardProps) {
+const formatDuration = (seconds: number) => {
+  const totalMinutes = Math.floor(seconds / 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+};
+
+export default function JobPostCard({ jobPost }: JobPostCardProps) {
   const formattedDate = jobPost.createdAt ? jobPost.createdAt.toLocaleDateString() : '';
+  const taskColor = TASK_TYPE_COLORS[jobPost.taskType] ?? TASK_TYPE_COLORS.job_visit;
 
   return (
     <View style={styles.card}>
+      <View style={[styles.typeIndicator, { backgroundColor: taskColor }]} />
       <View style={styles.header}>
         <Text style={styles.title} numberOfLines={1}>
           {jobPost.title || 'Untitled'}
@@ -37,6 +45,21 @@ export default function JobPostCard({ jobPost = mockJobPost }: JobPostCardProps)
         </Text>
       ) : null}
 
+      {jobPost.timeSpent && jobPost.timeSpent > 0 ? (
+        <Text style={styles.timeSpent}>Time logged: {formatDuration(jobPost.timeSpent)}</Text>
+      ) : null}
+      {jobPost.scheduledStartTime ? (
+        <Text style={styles.scheduleTime}>
+          Scheduled: {jobPost.scheduledStartTime.toLocaleString()}
+          {jobPost.scheduledEndTime
+            ? ` – ${new Date(jobPost.scheduledEndTime).toLocaleTimeString([], {
+                hour: 'numeric',
+                minute: '2-digit',
+              })}`
+            : ''}
+        </Text>
+      ) : null}
+
       <View style={styles.footer}>
         <Text style={styles.footerText}>Created: {formattedDate}</Text>
       </View>
@@ -46,6 +69,7 @@ export default function JobPostCard({ jobPost = mockJobPost }: JobPostCardProps)
 
 const styles = StyleSheet.create({
   card: {
+    position: 'relative',
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 16,
@@ -55,6 +79,14 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     shadowOffset: { width: 0, height: 6 },
     elevation: 3,
+    overflow: 'hidden',
+  },
+  typeIndicator: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: 5,
   },
   header: {
     flexDirection: 'row',
@@ -109,4 +141,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#9CA3AF',
   },
+  timeSpent: {
+    marginTop: 8,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#374151',
+  },
+  scheduleTime: { marginTop: 6, color: '#667085', fontSize: 13 },
 });

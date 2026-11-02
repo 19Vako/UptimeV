@@ -1,4 +1,4 @@
-import JobPost from '@/shared/db';
+import type { JobPost } from '@/shared/db';
 
 export const mockJobPost = {
   title: 'Проверка: монтаж двери',
