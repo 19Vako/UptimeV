@@ -1,10 +1,12 @@
 import { TableNames } from '@/shared/constants/table-names';
 import { database, JobPost } from '@/shared/db';
+import { AppState } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
 
 export const useJobTimer = (jobId: string) => {
   const [job, setJob] = useState<JobPost | null>(null);
   const [now, setNow] = useState(Date.now());
+  const [appIsActive, setAppIsActive] = useState(AppState.currentState === 'active');
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,6 +23,7 @@ export const useJobTimer = (jobId: string) => {
         const subscription = record.observe().subscribe({
           next: (updatedRecord) => {
             setJob(updatedRecord);
+            setNow(Date.now());
             setLoading(false);
           },
           error: (observationError: unknown) => {
@@ -48,10 +51,22 @@ export const useJobTimer = (jobId: string) => {
   }, [jobId]);
 
   useEffect(() => {
-    if (!job?.startTime) return undefined;
+    const subscription = AppState.addEventListener('change', (state) => {
+      const isActive = state === 'active';
+      setAppIsActive(isActive);
+      if (isActive) {
+        setNow(Date.now());
+      }
+    });
+
+    return () => subscription.remove();
+  }, []);
+
+  useEffect(() => {
+    if (job?.startTime == null || !appIsActive) return undefined;
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
-  }, [job?.startTime]);
+  }, [appIsActive, job?.startTime]);
 
   const updateTimer = useCallback(
     async (operation: (record: JobPost) => Promise<void> | void) => {
@@ -77,9 +92,10 @@ export const useJobTimer = (jobId: string) => {
 
   const start = useCallback(async () => {
     await updateTimer(async (record) => {
-      if (record.startTime) return;
+      if (record.startTime != null) return;
+      const startedAt = Date.now();
       await record.update((updated) => {
-        updated.startTime = Date.now();
+        updated.startTime = startedAt;
         updated.endTime = undefined;
         updated.timeSpent = updated.timeSpent ?? 0;
       });
@@ -88,12 +104,12 @@ export const useJobTimer = (jobId: string) => {
 
   const pause = useCallback(async () => {
     await updateTimer(async (record) => {
-      if (!record.startTime) return;
-      const endTime = Date.now();
-      const elapsedSeconds = Math.max(0, Math.floor((endTime - record.startTime) / 1000));
+      if (record.startTime == null) return;
+      const pausedAt = Date.now();
+      const elapsedSeconds = Math.max(0, pausedAt - record.startTime) / 1000;
       await record.update((updated) => {
         updated.timeSpent = (updated.timeSpent ?? 0) + elapsedSeconds;
-        updated.endTime = endTime;
+        updated.endTime = pausedAt;
         updated.startTime = undefined;
       });
     });
@@ -110,13 +126,12 @@ export const useJobTimer = (jobId: string) => {
   }, [updateTimer]);
 
   const elapsedSeconds =
-    (job?.timeSpent ?? 0) +
-    (job?.startTime ? Math.max(0, Math.floor((now - job.startTime) / 1000)) : 0);
+    (job?.timeSpent ?? 0) + (job?.startTime != null ? Math.max(0, now - job.startTime) / 1000 : 0);
 
   return {
     job,
     elapsedSeconds,
-    isRunning: Boolean(job?.startTime),
+    isRunning: job?.startTime != null,
     loading,
     busy,
     error,
