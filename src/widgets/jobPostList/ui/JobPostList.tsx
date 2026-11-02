@@ -1,5 +1,6 @@
-import { getPosts } from '@/features/getPosts';
-import { JobPost } from '@/shared/db';
+import { TableNames } from '@/shared/constants/table-names';
+import { database, JobPost } from '@/shared/db';
+import { Q } from '@nozbe/watermelondb';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, FlatList, StyleSheet, Text } from 'react-native';
 import { JobPostListItem } from './JobPostListItem';
@@ -10,10 +11,31 @@ export function JobPostList() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getPosts()
-      .then(setPosts)
-      .catch(() => setError('Failed to load posts'))
-      .finally(() => setIsLoading(false));
+    let active = true;
+    const subscription = database
+      .get<JobPost>(TableNames.JOBPOSTS)
+      .query(Q.where('status', 'open'))
+      .observe()
+      .subscribe({
+        next: (records) => {
+          if (active) {
+            setPosts(records);
+            setIsLoading(false);
+            setError(null);
+          }
+        },
+        error: (loadError: unknown) => {
+          if (active) {
+            setError(loadError instanceof Error ? loadError.message : 'Failed to load posts');
+            setIsLoading(false);
+          }
+        },
+      });
+
+    return () => {
+      active = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   if (isLoading) {
