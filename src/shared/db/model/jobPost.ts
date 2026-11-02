@@ -24,10 +24,17 @@ export default class JobPost extends Model {
   @text('title') title!: string;
   @text('description') description!: string;
   @text('status') status!: string;
+  @text('task_type') taskType!: string;
+  @field('time_spent') timeSpent?: number;
+  @field('start_time') startTime?: number;
+  @field('end_time') endTime?: number;
+  @field('scheduled_start_time') scheduledStartTime?: number;
+  @field('scheduled_end_time') scheduledEndTime?: number;
 
   @text('customer_id') customerId!: string;
   @text('assigned_team_id') assignedTeamId?: string;
   @text('customer') customer!: string;
+  @text('customer_phone') customerPhone?: string;
 
   @date('created_at') createdAt!: Date;
   @date('updated_at') updatedAt!: Date;
