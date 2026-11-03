@@ -1,3 +1,4 @@
+import type { TaskType } from '@/entities/jobPost/model/type';
 import { TableNames } from '@/shared/constants/table-names';
 import { Model, Query, Relation } from '@nozbe/watermelondb';
 import { Associations } from '@nozbe/watermelondb/Model';
