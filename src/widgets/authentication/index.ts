@@ -1,1 +1,0 @@
-export { AuthWidget } from './AuthWidget';

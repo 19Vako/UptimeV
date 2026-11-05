@@ -1,1 +1,0 @@
-export { CreateTeamWidget } from './CreateTeamWidget';

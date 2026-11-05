@@ -2,7 +2,7 @@ import { appSchema, tableSchema } from '@nozbe/watermelondb';
 import { TableNames } from '../constants/table-names';
 
 export const schema = appSchema({
-  version: 4,
+  version: 2,
   tables: [
     tableSchema({
       name: TableNames.JOBPOSTS,
