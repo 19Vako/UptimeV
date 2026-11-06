@@ -1,7 +1,7 @@
-import { JobPostCard, TASK_TYPE_COLORS } from '@/entities/jobPost';
-import JobMapWidget from '@/widgets/jobMapWidget';
+import { JobPostCard, TASK_TYPE_COLORS, TaskType } from '@/entities/jobPost';
 import { TableNames } from '@/shared/constants/table-names';
 import { database, JobPost } from '@/shared/db';
+import JobMapWidget from '@/widgets/jobMapWidget';
 import { router } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -168,7 +168,8 @@ export default function SchedulePage() {
                 const startMinutes = Math.max(0, (start - dayStart) / 60000);
                 const endMinutes = Math.min(24 * 60, (end - dayStart) / 60000);
                 const height = Math.max(30, ((endMinutes - startMinutes) / 60) * HOUR_HEIGHT);
-                const color = TASK_TYPE_COLORS[post.taskType] ?? TASK_TYPE_COLORS.job_visit;
+                const color =
+                  TASK_TYPE_COLORS[post.taskType as TaskType] ?? TASK_TYPE_COLORS.job_visit;
                 return (
                   <Pressable
                     key={post.id}

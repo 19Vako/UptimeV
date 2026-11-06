@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { JobPostCardProps, TASK_TYPE_COLORS } from '../model/type';
+import { JobPostCardProps, TASK_TYPE_COLORS, TaskType } from '../model/type';
 
 const formatDuration = (seconds: number) => {
   const totalMinutes = Math.floor(seconds / 60);
@@ -11,7 +11,7 @@ const formatDuration = (seconds: number) => {
 
 export default function JobPostCard({ jobPost }: JobPostCardProps) {
   const formattedDate = jobPost.createdAt ? jobPost.createdAt.toLocaleDateString() : '';
-  const taskColor = TASK_TYPE_COLORS[jobPost.taskType] ?? TASK_TYPE_COLORS.job_visit;
+  const taskColor = TASK_TYPE_COLORS[jobPost.taskType as TaskType] ?? TASK_TYPE_COLORS.job_visit;
 
   return (
     <View style={styles.card}>
