@@ -1,5 +1,6 @@
 import JobPostList from '@/widgets/jobPostList';
 import { seedDemoJobs } from '@/shared/db/seedDemoJobs';
+import { getCurrentLocation } from '@/shared/location';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -10,7 +11,11 @@ export const Home = () => {
     if (!__DEV__ || seeding) return;
     setSeeding(true);
     try {
-      const count = await seedDemoJobs();
+      const location = await getCurrentLocation();
+      const count = await seedDemoJobs({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
       Alert.alert(
         count > 0 ? 'Demo jobs added' : 'Demo jobs already exist',
         count > 0
@@ -20,7 +25,11 @@ export const Home = () => {
     } catch (error) {
       Alert.alert(
         'Could not add demo jobs',
-        error instanceof Error ? error.message : 'An unexpected database error occurred.',
+        error instanceof Error
+          ? error.message === 'Location permission was denied'
+            ? 'Location permission is required to place demo jobs near you.'
+            : error.message
+          : 'Unable to get your location or add the demo jobs. Please try again.',
       );
     } finally {
       setSeeding(false);
