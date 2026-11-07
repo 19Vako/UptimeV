@@ -18,7 +18,7 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function messageFromError(error: unknown): string {
-  return error instanceof Error ? error.message : 'Произошла непредвиденная ошибка.';
+  return error instanceof Error ? error.message : 'An unexpected error occurred.';
 }
 
 export function AuthProvider({ children }: React.PropsWithChildren) {
