@@ -1,11 +1,11 @@
-import { Redirect } from 'expo-router';
+import { Redirect, type Href } from 'expo-router';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useAuth } from '@/features/auth';
 
 export default function Index() {
-  const { session, loading, authError } = useAuth();
+  const { session, loading, authError, teamStatus } = useAuth();
 
-  if (loading) {
+  if (loading || (session && teamStatus === 'checking')) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#16805D" />
@@ -20,7 +20,8 @@ export default function Index() {
     );
   }
   if (!session) return <Redirect href="/(auth)/login" />;
-  return <Redirect href="/(job)/(tabs)/home" />;
+  if (teamStatus === 'ready') return <Redirect href="/(job)/(tabs)/home" />;
+  return <Redirect href={'/(auth)/create-team' as Href} />;
 }
 
 const styles = StyleSheet.create({

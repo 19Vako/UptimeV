@@ -7,7 +7,7 @@ export interface CreateTeamDTO {
 
 export const formSchema = z.object({
   teamName: z.string().min(2, 'Minimum 2 characters'),
-  membersCount: z.number().min(1, 'Required field'),
+  membersCount: z.number().int().min(1, 'Укажите целое число участников больше нуля.'),
 });
 
 export type FormValues = z.infer<typeof formSchema>;
