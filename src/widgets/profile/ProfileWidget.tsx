@@ -5,15 +5,15 @@ import type Team from '@/shared/db/model/team';
 
 export function ProfileWidget({ user, team }: { user: User; team: Team | null }) {
   const metadataName = user.user_metadata.full_name ?? user.user_metadata.name;
-  const displayName = typeof metadataName === 'string' ? metadataName : 'Не указано';
+  const displayName = typeof metadataName === 'string' ? metadataName : 'Not specified';
   const role = user.app_metadata.role;
 
   return (
     <View style={styles.card}>
-      <InfoRow label="Имя" value={displayName} />
-      <InfoRow label="Электронная почта" value={user.email ?? 'Не указана'} />
-      <InfoRow label="Роль" value={typeof role === 'string' ? role : 'Не указана в профиле'} />
-      <InfoRow label="Команда" value={team?.teamName ?? 'Не привязана'} />
+      <InfoRow label="Name" value={displayName} />
+      <InfoRow label="Email" value={user.email ?? 'Not provided'} />
+      <InfoRow label="Role" value={typeof role === 'string' ? role : 'Not specified in profile'} />
+      <InfoRow label="Team" value={team?.teamName ?? 'Not assigned'} />
     </View>
   );
 }

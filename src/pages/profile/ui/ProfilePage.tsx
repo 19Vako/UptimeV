@@ -17,7 +17,7 @@ export default function ProfilePage() {
       await signOut();
       router.replace('/(auth)/login');
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : 'Не удалось выйти из аккаунта.');
+      setError(reason instanceof Error ? reason.message : 'Unable to sign out.');
     } finally {
       setSigningOut(false);
     }
@@ -26,10 +26,10 @@ export default function ProfilePage() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.title}>Профиль сотрудника</Text>
+        <Text style={styles.title}>Employee Profile</Text>
         {user ? <ProfileWidget user={user} team={team} /> : null}
         <Text style={styles.note}>
-          Роль показывается только если она назначена сервером в защищённых метаданных профиля.
+          Your role appears here only if it has been assigned by the server.
         </Text>
         {error ? (
           <Text accessibilityRole="alert" style={styles.error}>
@@ -37,7 +37,7 @@ export default function ProfilePage() {
           </Text>
         ) : null}
         {signingOut ? <ActivityIndicator color="#16805D" /> : null}
-        <ActionButton title="Выйти из аккаунта" secondary onPress={handleSignOut} />
+        <ActionButton title="Sign Out" secondary onPress={handleSignOut} />
       </View>
     </SafeAreaView>
   );
