@@ -8,7 +8,7 @@
     "scheme": "uptimev",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon",
+      "icon": "./assets/images/icon.png",
       "bundleIdentifier": "com.vako-s19.UptimeV"
     },
     "android": {
@@ -30,9 +30,9 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 76
+          "backgroundColor": "#E4CA00",
+          "image": "./assets/images/splash-logo.png",
+          "imageWidth": 220
         }
       ],
       [
