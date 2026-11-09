@@ -3,6 +3,7 @@ export const TableNames = {
   JOBREPORTS: 'job_reports',
   COMMENTS: 'comments',
   TEAMS: 'teams',
+  REQUESTS: 'requests',
 } as const;
 
 export type TableName = (typeof TableNames)[keyof typeof TableNames];

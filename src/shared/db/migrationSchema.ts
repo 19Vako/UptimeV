@@ -1,5 +1,6 @@
 import {
   addColumns,
+  createTable,
   schemaMigrations,
   unsafeExecuteSql,
 } from '@nozbe/watermelondb/Schema/migrations';
@@ -45,6 +46,26 @@ export default schemaMigrations({
         unsafeExecuteSql(
           'UPDATE teams SET id = owner_id WHERE owner_id IS NOT NULL AND owner_id != id AND NOT EXISTS (SELECT 1 FROM teams AS existing WHERE existing.id = teams.owner_id);',
         ),
+      ],
+    },
+    {
+      toVersion: 5,
+      steps: [
+        createTable({
+          name: TableNames.REQUESTS,
+          columns: [
+            { name: 'customer_id', type: 'string', isOptional: true },
+            { name: 'title', type: 'string' },
+            { name: 'service_details', type: 'string' },
+            { name: 'preferred_visit_date', type: 'number' },
+            { name: 'backup_visit_date', type: 'number', isOptional: true },
+            { name: 'preferred_time_of_day', type: 'string' },
+            { name: 'assessment_details', type: 'string', isOptional: true },
+            { name: 'status', type: 'string' },
+            { name: 'created_at', type: 'number' },
+            { name: 'updated_at', type: 'number' },
+          ],
+        }),
       ],
     },
   ],

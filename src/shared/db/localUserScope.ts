@@ -4,6 +4,7 @@ import database from './database';
 import Comment from './model/comment';
 import JobPost from './model/jobPost';
 import JobReport from './model/jobReport';
+import Request from './model/request';
 import Team from './model/team';
 
 const LOCAL_DATA_USER_KEY = 'uptimev.local-data-user';
@@ -13,6 +14,7 @@ async function clearLocalDatabase() {
     database.get<JobPost>(TableNames.JOBPOSTS).query().fetch(),
     database.get<Comment>(TableNames.COMMENTS).query().fetch(),
     database.get<JobReport>(TableNames.JOBREPORTS).query().fetch(),
+    database.get<Request>(TableNames.REQUESTS).query().fetch(),
     database.get<Team>(TableNames.TEAMS).query().fetch(),
   ]);
   const deletions = records.flatMap((tableRecords) =>
