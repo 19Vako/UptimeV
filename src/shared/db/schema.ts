@@ -2,7 +2,7 @@ import { appSchema, tableSchema } from '@nozbe/watermelondb';
 import { TableNames } from '../constants/table-names';
 
 export const schema = appSchema({
-  version: 5,
+  version: 6,
   tables: [
     tableSchema({
       name: TableNames.JOBPOSTS,
@@ -73,6 +73,24 @@ export const schema = appSchema({
         { name: 'preferred_time_of_day', type: 'string' },
         { name: 'assessment_details', type: 'string', isOptional: true },
         { name: 'status', type: 'string' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+
+    tableSchema({
+      name: TableNames.QUOTES,
+      columns: [
+        { name: 'request_id', type: 'string', isOptional: true },
+        { name: 'customer_id', type: 'string', isOptional: true },
+        { name: 'title', type: 'string' },
+        { name: 'total', type: 'number' },
+        { name: 'discount', type: 'number' },
+        { name: 'tax', type: 'number' },
+        { name: 'required_deposit', type: 'number' },
+        { name: 'client_message', type: 'string', isOptional: true },
+        { name: 'status', type: 'string' },
+        { name: 'signature_url', type: 'string', isOptional: true },
         { name: 'created_at', type: 'number' },
         { name: 'updated_at', type: 'number' },
       ],
