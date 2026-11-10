@@ -3,6 +3,8 @@ import { TableNames } from '../constants/table-names';
 import database from './database';
 import Comment from './model/comment';
 import LineItem from './model/lineItem';
+import Invoice from './model/invoice';
+import InvoiceLineItem from './model/invoiceLineItem';
 import JobPost from './model/jobPost';
 import JobReport from './model/jobReport';
 import Quote from './model/quote';
@@ -16,6 +18,8 @@ async function clearLocalDatabase() {
     database.get<JobPost>(TableNames.JOBPOSTS).query().fetch(),
     database.get<Comment>(TableNames.COMMENTS).query().fetch(),
     database.get<LineItem>(TableNames.LINE_ITEMS).query().fetch(),
+    database.get<InvoiceLineItem>(TableNames.INVOICE_LINE_ITEMS).query().fetch(),
+    database.get<Invoice>(TableNames.INVOICES).query().fetch(),
     database.get<JobReport>(TableNames.JOBREPORTS).query().fetch(),
     database.get<Request>(TableNames.REQUESTS).query().fetch(),
     database.get<Quote>(TableNames.QUOTES).query().fetch(),

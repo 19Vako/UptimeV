@@ -2,7 +2,7 @@ import { appSchema, tableSchema } from '@nozbe/watermelondb';
 import { TableNames } from '../constants/table-names';
 
 export const schema = appSchema({
-  version: 7,
+  version: 8,
   tables: [
     tableSchema({
       name: TableNames.JOBPOSTS,
@@ -105,6 +105,49 @@ export const schema = appSchema({
         { name: 'unit_price', type: 'number' },
         { name: 'quantity', type: 'number' },
         { name: 'photo_url', type: 'string', isOptional: true },
+      ],
+    }),
+
+    tableSchema({
+      name: TableNames.INVOICES,
+      columns: [
+        { name: 'invoice_number', type: 'string' },
+        { name: 'client_id', type: 'string' },
+        { name: 'job_id', type: 'string', isOptional: true },
+        { name: 'subject', type: 'string' },
+        { name: 'issued_date', type: 'number' },
+        { name: 'due_date', type: 'number' },
+        { name: 'service_date', type: 'number' },
+        { name: 'billing_address', type: 'string' },
+        { name: 'property_address', type: 'string' },
+        { name: 'salesperson_id', type: 'string' },
+        { name: 'subtotal', type: 'number' },
+        { name: 'discount', type: 'number' },
+        { name: 'tax', type: 'number' },
+        { name: 'deposit', type: 'number' },
+        { name: 'total', type: 'number' },
+        { name: 'amount_paid', type: 'number' },
+        { name: 'balance_due', type: 'number' },
+        { name: 'client_message', type: 'string', isOptional: true },
+        { name: 'terms_and_conditions', type: 'string', isOptional: true },
+        { name: 'allow_partial_payments', type: 'boolean' },
+        { name: 'payment_methods', type: 'string' },
+        { name: 'attachments', type: 'string', isOptional: true },
+        { name: 'customer_signature', type: 'string', isOptional: true },
+        { name: 'status', type: 'string' },
+        { name: 'created_at', type: 'number' },
+        { name: 'updated_at', type: 'number' },
+      ],
+    }),
+
+    tableSchema({
+      name: TableNames.INVOICE_LINE_ITEMS,
+      columns: [
+        { name: 'invoice_id', type: 'string' },
+        { name: 'description', type: 'string' },
+        { name: 'quantity', type: 'number' },
+        { name: 'unit_price', type: 'number' },
+        { name: 'taxable', type: 'boolean' },
       ],
     }),
   ],
