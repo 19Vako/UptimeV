@@ -5,6 +5,7 @@ import { Associations } from '@nozbe/watermelondb/Model';
 import { children, date, field, relation, text } from '@nozbe/watermelondb/decorators';
 
 import Comment from './comment';
+import Invoice from './invoice';
 import JobReport from './jobReport';
 import Team from './team';
 
@@ -14,11 +15,13 @@ export default class JobPost extends Model {
   static associations: Associations = {
     [TableNames.COMMENTS]: { type: 'has_many', foreignKey: 'job_post_id' },
     [TableNames.JOBREPORTS]: { type: 'has_many', foreignKey: 'job_id' },
+    [TableNames.INVOICES]: { type: 'has_many', foreignKey: 'job_id' },
     [TableNames.TEAMS]: { type: 'belongs_to', key: 'assigned_team_id' },
   };
 
   @children(TableNames.COMMENTS) comments!: Query<Comment>;
   @children(TableNames.JOBREPORTS) reports!: Query<JobReport>;
+  @children(TableNames.INVOICES) invoices!: Query<Invoice>;
 
   @relation(TableNames.TEAMS, 'assigned_team_id') team?: Relation<Team>;
 
