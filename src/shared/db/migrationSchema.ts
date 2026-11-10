@@ -68,5 +68,43 @@ export default schemaMigrations({
         }),
       ],
     },
+    {
+      toVersion: 6,
+      steps: [
+        createTable({
+          name: TableNames.QUOTES,
+          columns: [
+            { name: 'request_id', type: 'string', isOptional: true },
+            { name: 'customer_id', type: 'string', isOptional: true },
+            { name: 'title', type: 'string' },
+            { name: 'total', type: 'number' },
+            { name: 'discount', type: 'number' },
+            { name: 'tax', type: 'number' },
+            { name: 'required_deposit', type: 'number' },
+            { name: 'client_message', type: 'string', isOptional: true },
+            { name: 'status', type: 'string' },
+            { name: 'signature_url', type: 'string', isOptional: true },
+            { name: 'created_at', type: 'number' },
+            { name: 'updated_at', type: 'number' },
+          ],
+        }),
+      ],
+    },
+    {
+      toVersion: 7,
+      steps: [
+        createTable({
+          name: TableNames.LINE_ITEMS,
+          columns: [
+            { name: 'quote_id', type: 'string' },
+            { name: 'name', type: 'string' },
+            { name: 'description', type: 'string' },
+            { name: 'unit_price', type: 'number' },
+            { name: 'quantity', type: 'number' },
+            { name: 'photo_url', type: 'string', isOptional: true },
+          ],
+        }),
+      ],
+    },
   ],
 });
