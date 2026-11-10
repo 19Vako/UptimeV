@@ -90,5 +90,21 @@ export default schemaMigrations({
         }),
       ],
     },
+    {
+      toVersion: 7,
+      steps: [
+        createTable({
+          name: TableNames.LINE_ITEMS,
+          columns: [
+            { name: 'quote_id', type: 'string' },
+            { name: 'name', type: 'string' },
+            { name: 'description', type: 'string' },
+            { name: 'unit_price', type: 'number' },
+            { name: 'quantity', type: 'number' },
+            { name: 'photo_url', type: 'string', isOptional: true },
+          ],
+        }),
+      ],
+    },
   ],
 });

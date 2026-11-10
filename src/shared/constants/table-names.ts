@@ -5,6 +5,7 @@ export const TableNames = {
   TEAMS: 'teams',
   REQUESTS: 'requests',
   QUOTES: 'quotes',
+  LINE_ITEMS: 'line_items',
 } as const;
 
 export type TableName = (typeof TableNames)[keyof typeof TableNames];

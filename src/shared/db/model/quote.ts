@@ -1,7 +1,8 @@
 import { TableNames } from '@/shared/constants/table-names';
-import { Model, Relation } from '@nozbe/watermelondb';
-import { date, field, relation, text } from '@nozbe/watermelondb/decorators';
+import { Model, Query, Relation } from '@nozbe/watermelondb';
+import { children, date, field, relation, text } from '@nozbe/watermelondb/decorators';
 import { Associations } from '@nozbe/watermelondb/Model';
+import LineItem from './lineItem';
 import type Request from './request';
 
 export default class Quote extends Model {
@@ -9,10 +10,11 @@ export default class Quote extends Model {
 
   static associations: Associations = {
     [TableNames.REQUESTS]: { type: 'belongs_to', key: 'request_id' },
+    [TableNames.LINE_ITEMS]: { type: 'has_many', foreignKey: 'quote_id' },
   };
 
+  @children(TableNames.LINE_ITEMS) lineItems!: Query<LineItem>;
   @relation(TableNames.REQUESTS, 'request_id') request?: Relation<Request>;
-
   @text('request_id') requestId?: string;
   @text('customer_id') customerId?: string;
   @text('title') title!: string;
