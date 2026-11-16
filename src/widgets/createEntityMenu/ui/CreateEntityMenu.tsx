@@ -1,54 +1,29 @@
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
-import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
-
-type CreateAction = {
-  label: string;
-  icon: keyof typeof Ionicons.glyphMap;
-  color: string;
-  onPress: () => void;
-};
+import { Alert, FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { CREATE_ACTIONS } from '../constants/actions';
+import type { CreateAction } from '../type';
+import { ActionItem } from './ActionItem';
 
 export function CreateEntityMenu() {
   const [expanded, setExpanded] = useState(false);
 
-  const actions: CreateAction[] = [
-    {
-      label: 'Client',
-      icon: 'person-add-outline',
-      color: '#55BFAF',
-      onPress: () => showComingSoon('Client'),
-    },
-    {
-      label: 'Job',
-      icon: 'hammer-outline',
-      color: '#A8C916',
-      onPress: () => router.push('/(job)/createJobPost'),
-    },
-    {
-      label: 'Request',
-      icon: 'file-tray-full-outline',
-      color: '#526BCB',
-      onPress: () => router.push('/(job)/request-create'),
-    },
-    {
-      label: 'Quote',
-      icon: 'document-text-outline',
-      color: '#C45A9B',
-      onPress: () => showComingSoon('Quote'),
-    },
-    {
-      label: 'Invoice',
-      icon: 'receipt-outline',
-      color: '#7963B5',
-      onPress: () => showComingSoon('Invoice'),
-    },
-  ];
-
   const selectAction = (action: CreateAction) => {
     setExpanded(false);
-    action.onPress();
+    switch (action.label) {
+      case 'Client':
+      case 'Quote':
+      case 'Invoice':
+        showComingSoon(action.label);
+        break;
+      case 'Job':
+        router.push('/(job)/createJobPost');
+        break;
+      case 'Request':
+        router.push('/(job)/request-create');
+        break;
+    }
   };
 
   return (
@@ -62,27 +37,17 @@ export function CreateEntityMenu() {
         />
       ) : null}
       <View style={styles.controls}>
-        {expanded
-          ? actions.map((action) => (
-              <View key={action.label} style={styles.actionRow}>
-                <View style={styles.labelBubble}>
-                  <Text style={styles.label}>{action.label}</Text>
-                </View>
-                <Pressable
-                  accessibilityRole="button"
-                  accessibilityLabel={`Create ${action.label}`}
-                  onPress={() => selectAction(action)}
-                  style={({ pressed }) => [
-                    styles.actionButton,
-                    { backgroundColor: action.color },
-                    pressed && styles.pressed,
-                  ]}
-                >
-                  <Ionicons name={action.icon} size={25} color="#FFFFFF" />
-                </Pressable>
-              </View>
-            ))
-          : null}
+        {expanded ? (
+          <FlatList
+            data={CREATE_ACTIONS}
+            keyExtractor={(action) => action.label}
+            renderItem={({ item }) => (
+              <ActionItem action={item} onPress={() => selectAction(item)} />
+            )}
+            contentContainerStyle={styles.actionList}
+            scrollEnabled={false}
+          />
+        ) : null}
         <Pressable
           accessibilityRole="button"
           accessibilityLabel={expanded ? 'Close create menu' : 'Create'}
@@ -97,7 +62,7 @@ export function CreateEntityMenu() {
   );
 }
 
-function showComingSoon(entity: 'Client' | 'JobPost' | 'Quote' | 'Invoice') {
+function showComingSoon(entity: 'Client' | 'Quote' | 'Invoice') {
   Alert.alert(`${entity} creation`, `${entity} creation will be available soon.`);
 }
 
@@ -116,41 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 12,
   },
-  actionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  labelBubble: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#000000',
-    shadowOpacity: 0.14,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 3,
-  },
-  label: {
-    color: '#667085',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  actionButton: {
-    width: 58,
-    height: 58,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-    borderRadius: 29,
-    shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 5,
-  },
+  actionList: { gap: 12 },
   mainButton: {
     width: 62,
     height: 62,
@@ -166,9 +97,5 @@ const styles = StyleSheet.create({
   },
   mainPressed: {
     opacity: 0.8,
-  },
-  pressed: {
-    opacity: 0.8,
-    transform: [{ scale: 0.96 }],
   },
 });
