@@ -1,4 +1,5 @@
-import JobPostList from '@/widgets/jobPostList';
+import { CreateEntityMenu } from '@/widgets/createEntityMenu';
+import { HomeWorkflowWidget } from '@/widgets/homeWorkflow';
 import { seedDemoJobs } from '@/shared/db/seedDemoJobs';
 import React, { useState } from 'react';
 import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -51,7 +52,8 @@ export const Home = () => {
           </Pressable>
         </View>
       ) : null}
-      <JobPostList />
+      <HomeWorkflowWidget />
+      <CreateEntityMenu />
     </View>
   );
 };

@@ -23,6 +23,10 @@ export default function JobLayout() {
       <Stack.Screen name="createJobPost" />
       <Stack.Screen name="createReport" />
       <Stack.Screen name="jobPost" />
+      <Stack.Screen name="request-create" />
+      <Stack.Screen name="request-detail" />
+      <Stack.Screen name="request-edit" />
+      <Stack.Screen name="requests" />
     </Stack>
   );
 }
