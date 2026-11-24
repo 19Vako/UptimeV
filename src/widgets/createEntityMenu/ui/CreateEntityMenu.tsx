@@ -13,9 +13,11 @@ export function CreateEntityMenu() {
     setExpanded(false);
     switch (action.label) {
       case 'Client':
-      case 'Quote':
       case 'Invoice':
         showComingSoon(action.label);
+        break;
+      case 'Quote':
+        router.push('/(job)/quote-create');
         break;
       case 'Job':
         router.push('/(job)/createJobPost');
@@ -62,7 +64,7 @@ export function CreateEntityMenu() {
   );
 }
 
-function showComingSoon(entity: 'Client' | 'Quote' | 'Invoice') {
+function showComingSoon(entity: 'Client' | 'Invoice') {
   Alert.alert(`${entity} creation`, `${entity} creation will be available soon.`);
 }
 
@@ -81,7 +83,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     gap: 12,
   },
-  actionList: { gap: 12 },
+  actionList: { gap: 12, alignItems: 'flex-end' },
   mainButton: {
     width: 62,
     height: 62,

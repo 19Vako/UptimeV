@@ -8,8 +8,7 @@ import { ActionButton } from '@/shared/ui';
 
 const statusLabels: Record<RequestStatus, string> = {
   new: 'New',
-  in_progress: 'In progress',
-  completed: 'Completed',
+  completed: 'Assessment completed',
   rejected: 'Rejected',
   cancelled: 'Cancelled',
 };

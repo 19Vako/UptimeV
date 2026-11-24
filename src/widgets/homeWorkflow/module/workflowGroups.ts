@@ -9,8 +9,7 @@ import type { WorkflowItem, WorkflowStatusGroup } from '../type';
 export function requestGroups(records: Request[]): WorkflowStatusGroup[] {
   const groups = [
     { key: REQUEST_STATUSES.NEW, label: 'New' },
-    { key: REQUEST_STATUSES.IN_PROGRESS, label: 'Assessment in progress' },
-    { key: REQUEST_STATUSES.COMPLETED, label: 'Assessments completed' },
+    { key: REQUEST_STATUSES.COMPLETED, label: 'Assessment completed' },
     { key: REQUEST_STATUSES.REJECTED, label: 'Rejected' },
     { key: REQUEST_STATUSES.CANCELLED, label: 'Cancelled' },
   ];
@@ -45,7 +44,12 @@ export function quoteGroups(records: Quote[]): WorkflowStatusGroup[] {
     label,
     items: records
       .filter((record) => record.status === key)
-      .map((record) => ({ id: record.id, title: record.title })),
+      .map((record) => ({
+        id: record.id,
+        title: record.title,
+        detail: `$${(record.total / 100).toFixed(2)}`,
+        onPress: () => router.push({ pathname: '/(job)/quote-edit', params: { id: record.id } }),
+      })),
   }));
 }
 
