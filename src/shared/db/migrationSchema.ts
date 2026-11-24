@@ -152,5 +152,18 @@ export default schemaMigrations({
         }),
       ],
     },
+    {
+      toVersion: 9,
+      steps: [
+        addColumns({
+          table: TableNames.QUOTES,
+          columns: [{ name: 'discount_percent', type: 'number', isOptional: true }],
+        }),
+      ],
+    },
+    {
+      toVersion: 10,
+      steps: [unsafeExecuteSql("UPDATE requests SET status = 'new' WHERE status = 'in_progress';")],
+    },
   ],
 });
