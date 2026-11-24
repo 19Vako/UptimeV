@@ -1,6 +1,6 @@
+import { useAuth } from '@/features/auth';
 import { Redirect, Stack, type Href } from 'expo-router';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
-import { useAuth } from '@/features/auth';
 
 export default function JobLayout() {
   const { session, loading, teamStatus } = useAuth();
@@ -27,6 +27,8 @@ export default function JobLayout() {
       <Stack.Screen name="request-detail" />
       <Stack.Screen name="request-edit" />
       <Stack.Screen name="requests" />
+      <Stack.Screen name="quote-create" />
+      <Stack.Screen name="signature" />
     </Stack>
   );
 }
