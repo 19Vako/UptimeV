@@ -20,6 +20,7 @@ export default class Quote extends Model {
   @text('title') title!: string;
   @field('total') total!: number;
   @field('discount') discount!: number;
+  @field('discount_percent') discountPercent?: number;
   @field('tax') tax!: number;
   @field('required_deposit') requiredDeposit!: number;
   @text('client_message') clientMessage?: string;

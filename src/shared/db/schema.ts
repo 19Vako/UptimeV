@@ -2,7 +2,7 @@ import { appSchema, tableSchema } from '@nozbe/watermelondb';
 import { TableNames } from '../constants/table-names';
 
 export const schema = appSchema({
-  version: 8,
+  version: 10,
   tables: [
     tableSchema({
       name: TableNames.JOBPOSTS,
@@ -86,6 +86,7 @@ export const schema = appSchema({
         { name: 'title', type: 'string' },
         { name: 'total', type: 'number' },
         { name: 'discount', type: 'number' },
+        { name: 'discount_percent', type: 'number', isOptional: true },
         { name: 'tax', type: 'number' },
         { name: 'required_deposit', type: 'number' },
         { name: 'client_message', type: 'string', isOptional: true },

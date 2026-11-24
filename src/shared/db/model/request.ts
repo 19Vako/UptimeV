@@ -13,7 +13,7 @@ export default class Request extends Model {
   @field('preferred_time_of_day')
   preferredTimeOfDay!: 'morning' | 'afternoon' | 'anytime';
   @text('assessment_details') assessmentDetails?: string;
-  @field('status') status!: 'new' | 'in_progress' | 'completed' | 'rejected' | 'cancelled';
+  @field('status') status!: 'new' | 'completed' | 'rejected' | 'cancelled';
   @date('created_at') createdAt!: Date;
   @date('updated_at') updatedAt!: Date;
 }
