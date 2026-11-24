@@ -2,7 +2,7 @@ import { TableNames } from '@/shared/constants/table-names';
 import { database, Request } from '@/shared/db';
 
 export function observeRequests() {
-  return database.get<Request>(TableNames.REQUESTS).query().observe();
+  return database.get<Request>(TableNames.REQUESTS).query().observeWithColumns(['status']);
 }
 
 export function observeRequest(id: string) {
