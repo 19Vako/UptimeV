@@ -83,7 +83,7 @@ export function HomeWorkflowWidget() {
       {
         title: 'Quotes',
         color: '#BF5A9B',
-        icon: 'search-outline' as const,
+        icon: 'document-text-outline' as const,
         groups: quoteGroups(quotes),
       },
       {

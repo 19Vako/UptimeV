@@ -1,27 +1,18 @@
 import { REQUEST_STATUSES, type RequestStatus } from '@/entities/request';
-import { deleteRequest } from '@/features/deleteRequest';
+import { CompleteAssessmentButton } from '@/features/completeAssessment';
 import { observeRequest } from '@/features/getRequests';
 import { TableNames } from '@/shared/constants/table-names';
-import { database, JobPost } from '@/shared/db';
+import { database, JobPost, Request } from '@/shared/db';
 import { ActionButton } from '@/shared/ui';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 type Props = { id: string };
 type DetailTab = 'request' | 'notes';
 
 const statusLabels: Record<RequestStatus, string> = {
   new: 'New',
-  in_progress: 'In progress',
   completed: 'Completed',
   rejected: 'Rejected',
   cancelled: 'Cancelled',
@@ -40,7 +31,6 @@ export function RequestDetailsWidget({ id }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [tab, setTab] = useState<DetailTab>('request');
-  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -89,42 +79,14 @@ export function RequestDetailsWidget({ id }: Props) {
     };
   }, [id]);
 
-  const confirmDelete = () => {
-    Alert.alert('Delete request?', 'This request will be permanently removed from this device.', [
-      { text: 'Cancel', style: 'cancel' },
-      {
-        text: 'Delete',
-        style: 'destructive',
-        onPress: () => {
-          setDeleting(true);
-          void deleteRequest(id)
-            .then(() => router.replace('/(job)/(tabs)/requests'))
-            .catch((deleteError: unknown) => {
-              Alert.alert(
-                'Could not delete request',
-                deleteError instanceof Error
-                  ? deleteError.message
-                  : 'An unexpected error occurred.',
-              );
-            })
-            .finally(() => setDeleting(false));
-        },
-      },
-    ]);
-  };
-
   if (loading) return <ActivityIndicator style={styles.center} color="#16805D" />;
   if (error || !request) return <Text style={styles.error}>{error ?? 'Request not found.'}</Text>;
+
+  const canManage = request.status === REQUEST_STATUSES.NEW;
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
-        <View style={styles.headerIcon}>
-          <Text style={styles.headerIconText}>▣</Text>
-        </View>
-        <Text style={styles.statusLabel}>
-          {statusLabels[request.status] ?? REQUEST_STATUSES.NEW}
-        </Text>
         <Text style={styles.title}>Request for {clientJob?.customer || 'Client'}</Text>
         {clientJob ? <Text style={styles.clientName}>{clientJob.customer}</Text> : null}
         {clientJob?.location ? <Text style={styles.address}>{clientJob.location}</Text> : null}
@@ -141,26 +103,18 @@ export function RequestDetailsWidget({ id }: Props) {
         </View>
       </View>
 
-      <View style={styles.actionNotice}>
-        <Text style={styles.noticeText}>
-          Assessment completion and Quote conversion are not available for Requests yet.
-        </Text>
-      </View>
-
       <View style={styles.actionRow}>
         <View style={styles.actionButton}>
           <ActionButton
-            title="Edit Request"
-            onPress={() => router.push({ pathname: '/(job)/request-edit', params: { id } })}
+            title="Convert to Quote"
+            disabled={!canManage}
+            onPress={() =>
+              router.push({ pathname: '/(job)/quote-create', params: { requestId: id } })
+            }
           />
         </View>
         <View style={styles.actionButton}>
-          <ActionButton
-            title={deleting ? 'Deleting…' : 'Delete'}
-            secondary
-            disabled={deleting}
-            onPress={confirmDelete}
-          />
+          <CompleteAssessmentButton requestId={id} disabled={!canManage} />
         </View>
       </View>
 
@@ -231,8 +185,6 @@ const styles = StyleSheet.create({
   scheduleTitle: { color: '#34433D', fontSize: 15, fontWeight: '700' },
   scheduleValue: { color: '#667085', fontSize: 15 },
   scheduleSecondary: { color: '#77818A', fontSize: 14 },
-  actionNotice: { paddingHorizontal: 18, paddingVertical: 12, backgroundColor: '#F3F4F5' },
-  noticeText: { color: '#77818A', fontSize: 12, lineHeight: 17, textAlign: 'center' },
   actionRow: {
     flexDirection: 'row',
     gap: 10,
