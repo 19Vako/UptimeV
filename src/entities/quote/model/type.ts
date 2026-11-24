@@ -9,18 +9,16 @@ export const QUOTE_STATUSES = {
 
 export type QuoteStatus = (typeof QUOTE_STATUSES)[keyof typeof QUOTE_STATUSES];
 
-/** Integer amount in the currency's minor unit (for example, cents). */
-export type MinorUnitAmount = number;
-
 export interface QuoteType {
   id: string;
   requestId?: string;
   customerId?: string;
   title: string;
-  total: MinorUnitAmount;
-  discount: MinorUnitAmount;
-  tax: MinorUnitAmount;
-  requiredDeposit: MinorUnitAmount;
+  total: number;
+  discount: number;
+  discountPercent?: number;
+  tax: number;
+  requiredDeposit: number;
   clientMessage?: string;
   status: QuoteStatus;
   signatureUrl?: string;
